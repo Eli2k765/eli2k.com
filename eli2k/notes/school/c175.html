@@ -86,16 +86,266 @@
                     <div id="blurbs">
                       <div class="N">
                         <div id="N"></div>
-                        <h3>Relational Model</h3>
-                        <div></div>
+                        <h3>Entity Relationship Diagrams</h3>
+                        <div>
+                          <h4>Crows Foot Notation with Modality</h4>
+                          <div>
+                            <ul>
+                              <li><img src=
+                                "https://eli2k.com/resources/images/notes/relationships.png"
+                                alt=
+                                "Mandatory One to One: A line going from one entity box to another with two verticle lines on each side, the line furthest from the entity is the minimum and the second is the maximum. Mandatory One to Many: Another line between boxes but this one has two verticle lines on one side and one verticle line followed by a &quot;crows foot&quot; which is similar to a &lt; with a line horizontally in the middle. Optional is represented by a circle as the minimum."></li>
+                              <li>The minimum will always be on the inside and the maximum on the outside.</li>
+                              <li>A zero would indicate an optional relationship</li>
+                            </ul>
+                          </div>
+                          <h4>Describing Relationships</h4>
+                          <ul>
+                            <li>Unary</li>
+                            <li>Binary</li>
+                            <li>Ternary</li>
+                          </ul>
+                        </div>
                         <h3>SQL</h3>
-                        <div></div>
+                        <div>
+                          <h4>DDL: Data Definintion Language</h4>
+                          <div>
+                            <ul>
+                              <li>Define and manage DB structures</li>
+                              <li>Main SQL commands:</li>
+                              <ul>
+                                <li>CREATE</li>
+                                <ul>
+                                  <li>Create DB objects</li>
+                                  <li>CREATE TABLE Employee(empId Integer NOT NULL, empName Char(25) NOT NULL, CONSTRAINT empPk PRIMARY KEY(empID));</li>
+                                </ul>
+                                <li>ALTER</li>
+                                <ul>
+                                  <li>Modify structure of existing DB objects</li>
+                                  <li>ALTER TABLE Employee ADD CONSTRAINT empPk PRIMARY KEY(empId);</li>
+                                </ul>
+                                <li>DROP</li>
+                                <ul>
+                                  <li>Delete existing objects</li>
+                                </ul>
+                              </ul>
+                            </ul>
+                          </div>
+                          <h4>DML: Data Manipulation Language</h4>
+                          <div>
+                            <ul>
+                              <li>Define, update and retrieve data</li>
+                              <li>Main SQL commands for defining and updating:</li>
+                              <ul>
+                                <li>INSERT INTO</li>
+                                <ul>
+                                  <li>Add a new row</li>
+                                  <li>INSERT INTO Employee (empId, salaryCode, lastName) VALUES (62, 11, 'Halpert');</li>
+                                </ul>
+                                <li>UPDATE</li>
+                                <ul>
+                                  <li>Update rows</li>
+                                  <li>UPDATE Employee SET phone = '123-867-5309' WHERE empId = 29;</li>
+                                </ul>
+                                <li>DELETE FROM</li>
+                                <ul>
+                                  <li>Delete rows</li>
+                                  <li>DELETE FROM Employee WHERE empId = 29;</li>
+                                </ul>
+                              </ul>
+                              <li>Main SQL commands for retrieving:</li>
+                              <ul>
+                                <li>SELECT</li>
+                                <ul>
+                                  <li>Queries a table and returns result as a 2D relation table.</li>
+                                  <li>SELECT empName FROM Employee WHERE empId = 29;</li>
+                                  <li>SELECT * FROM Employee;</li>
+                                  <ul>
+                                    <li>* = All Columns</li>
+                                  </ul>
+                                </ul>
+                                <li>DISTINCT</li>
+                                <ul>
+                                  <li>Added to SELECT to suppress duplicates</li>
+                                  <li>SELECT DISTINCT deptId FROM Employee;</li>
+                                </ul>
+                                <li>WHERE</li>
+                                <ul>
+                                  <li>Allows matching</li>
+                                  <ul>
+                                    <li>=</li>
+                                    <li>&lt;&gt; or !=</li>
+                                    <li>&gt;</li>
+                                    <li>&lt;</li>
+                                    <li>&gt;=</li>
+                                    <li>&lt;=</li>
+                                    <li>IN</li>
+                                    <ul>
+                                      <li>SELECT empName FROM Employee WHERE deptId IN (4, 8, 9);</li>
+                                    </ul>
+                                    <li>AND</li>
+                                    <ul>
+                                      <li>Intersection</li>
+                                    </ul>
+                                    <li>OR</li>
+                                    <ul>
+                                      <li>Union</li>
+                                    </ul>
+                                    <li>NOT</li>
+                                    <ul>
+                                      <li>Exclusion</li>
+                                    </ul>
+                                    <li>BETWEEN</li>
+                                    <ul>
+                                      <li>Range</li>
+                                    </ul>
+                                    <li>LIKE</li>
+                                    <ul>
+                                      <li>Allows wildcard search</li>
+                                      <li>%</li>
+                                      <ul>
+                                        <li>Match all</li>
+                                      </ul>
+                                      <li>_</li>
+                                      <ul>
+                                        <li>Match letter</li>
+                                      </ul>
+                                    </ul>
+                                  </ul>
+                                </ul>
+                              </ul>
+                              <li>GROUP BY</li>
+                              <ul>
+                                <li>HAVING</li>
+                                <ul>
+                                  <li>Same functionality as WHERE</li>
+                                  <li>SELECT salespersonId, salespersonLastName, SUM(saleAmount) AS totalSales FROM Sales GROUP BY salespersonId, salespersonLastName HAVING SUM(saleAmount) &gt;= 10000; </li>
+                                </ul>
+                              </ul>
+                              <li>ORDER BY</li>
+                              <ul>
+                                <li>ORDER BY empName DESC;</li>
+                                <li>ORDER BY empName ASC;</li>
+                                <ul>
+                                  <li>Default</li>
+                                </ul>
+                              </ul>
+                              <li>COUNT, MIN, MAX, SUM, AVG, STDEV</li>
+                              <li>JOIN</li>
+                              <ul>
+                                <li>Combine data from multiple tables</li>
+                                <li>Outer Join:</li>
+                                <ul>
+                                  <li>Left Outer Join</li>
+                                  <ul>
+                                    <li>SELECT empName, deptName FROM Employee E LEFT OUTER JOIN Department D ON E.deptId = D.deptId;</li>
+                                  </ul>
+                                  <li>Full Outer Join</li>
+                                  <li>Right Outer Join</li>
+                                </ul>
+                                <li>Inner Join:</li>
+                                <ul>
+                                  <li>Must have matching values from both tables</li>
+                                  <li>Implicit join via WHERE:</li>
+                                  <ul>
+                                    <li>SELECT empName, deptName FROM Employee AS E, Department AS D WHERE E.deptId = D.deptId</li>
+                                  </ul>
+                                  <li>Explicit join:</li>
+                                  <ul>
+                                    <li>SELECT empName, deptName FROM Employee E INNER JOIN Department D ON E.deptId = D.deptId WHERE D.deptName NOT LIKE 'Account%';</li>
+                                  </ul>
+                                </ul>
+                                </ul>
+                            </ul>
+                          </div>
+                          <h4>DCL: Data Control Language</h4>
+                          <div>
+                            <ul>
+                              <li>Create user accts and manages permissions</li>
+                            </ul>
+                          </div>
+                        </div>
                         <h3>Data Modeling</h3>
-                        <div></div>
+                        <div>
+                          <h4>Keys</h4>
+                          <div>
+                            <ul>
+                              <li>Unique</li>
+                              <ul>
+                                <li>Primary Key</li>
+                                <ul>
+                                  <li>Main key that identifies a row in a table</li>
+                                  <li>never changing, never null</li>
+                                </ul>
+                                <li>Candidate Key</li>
+                                <ul>
+                                  <li>Has the potential to become a primary key</li>
+                                  <li>Smallest combination of columns for uniqueness</li>
+                                </ul>
+                                <li>Composite Key</li>
+                                <ul>
+                                  <li>Composed of two or more columns</li>
+                                </ul>
+                                <li>Surrogate Key</li>
+                                <ul>
+                                  <li>Added to a relation to act as the primary key</li>
+                                  <li>Not a natural key</li>
+                                </ul>
+                              </ul>
+                              <li>Non-Unique</li>
+                              <ul>
+                                <li>Foreign Key</li>
+                                <ul>
+                                  <li>A primary key that links multiple tables.</li>
+                                  <li>Referential integrity ensures foreign keys refer to an entity</li>
+                                  <ul>
+                                    <li>DELETE, UPDATE, INSERT</li>
+                                  </ul>
+                                </ul>
+                              </ul>
+                            </ul>
+                            <h4>Keys and Relationships</h4>
+                            <ul>
+                              <li>1:1</li>
+                              <ul>
+                                <li>Optional side will recieve the foreign key</li>
+                              </ul>
+                              <li>1:M</li>
+                              <ul>
+                                <li>The Many side recieves the foreign key</li>
+                              </ul>
+                              <li>M:M</li>
+                              <ul>
+                                <li>The intersection has a composite key</li>
+                              </ul>
+                            </ul>
+                          </div>
+                        </div>
                         <h3>Normalization</h3>
-                        <div></div>
+                        <div>
+                          <ul>
+                            <li>Ensuring that a relation is well formed</li>
+                            <li>Normal Forms:</li>
+                            <ul>
+                              <li>1NF</li>
+                              <ul>
+                                <li>Cells hold a single value (atomicity)</li>
+                              </ul>
+                              <li>2NF</li>
+                              <ul>
+                                <li>1NF + no partial dependencies</li>
+                              </ul>
+                              <li>3NF</li>
+                              <ul>
+                                <li>2NF + no transitive dependencies</li>
+                              </ul>
+                            </ul>
+                          </ul>
+                        </div>
                         <h3>Business Intelligence</h3>
-                        <div></div>
+                        <div>
+                          
+                        </div>
                       </div>
                       <div class="R">
                         <div id="R"></div>
