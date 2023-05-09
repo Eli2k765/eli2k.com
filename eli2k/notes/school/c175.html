@@ -86,8 +86,85 @@
                     <div id="blurbs">
                       <div class="N">
                         <div id="N"></div>
-                        <h3>Entity Relationship Diagrams</h3>
+                        <h3>Intro</h3>
                         <div>
+                          <h4>DBMS</h4>
+                          <div>
+                            <ul>
+                              <li>Functions:</li>
+                              <ul>
+                                <li>Data Dictionary Management</li>
+                                <ul>
+                                  <li>Data Abstraction and dependence removals</li>
+                                </ul>
+                                <li>Data Storage Management</li>
+                                <ul>
+                                  <li>Performance Tuning</li>
+                                </ul>
+                                <li>Data Transformation and Presentation</li>
+                                <li>Security Management</li>
+                                <li>UAC</li>
+                                <li>Integrity Managemnt</li>
+                                <li>Backup and Recovery Management</li>
+                              </ul>
+                            </ul>
+                          </div>
+                        </div>
+                        <h3>Entity Relationship Diagrams and Data Modelling</h3>
+                        <div>
+                          <h4>Evolution of Data Models</h4>
+                          <div>
+                            <ol>
+                              <li>Hierarchical</li>
+                              <ul>
+                                <li>Contains levels, parents and segments(children)</li>
+                                <li>1:M</li>
+                              </ul>
+                              <li>Network</li>
+                              <ul>
+                                <li>Allows a record to have more than one parent</li>
+                              </ul>
+                              <li>Relational</li>
+                              <ul>
+                                <li>Uses relation tables, tuples and attributes</li>
+                              </ul>
+                              <li>ERDs</li>
+                              <ul>
+                                <li>Graphical representations of entities and their relationships</li>
+                                <li><img src=
+                                "https://eli2k.com/resources/images/notes/erdNotations.png"
+                                alt=
+                                "Shows chen, crows foot and UML notation. This class uses a combination of crows foot and uml. crows foot is described below, uml uses numbers."></li>
+                              </ul>
+                              <li>OOM</li>
+                              <ul>
+                                <li>Objects, attributes, classes, methods</li>
+                              </ul>
+                              <li>Big Data</li>
+                              <ul>
+                                <li>3 Vs</li>
+                              </ul>
+                              <li>NoSQL</li>
+                              <ul>
+                                <li>Not Only SQL</li>
+                                <li>Relational vs Cassandra</li>
+                                <ul>
+                                  <li>Relational:</li>
+                                  <ul>
+                                    <li>Data is stored in a database/schema which contains at least one table</li>
+                                    <li>Tables can be joined</li>
+                                  </ul>
+                                  <li>Cassandra:</li>
+                                  <ul>
+                                    <li>Data is stored in a keyspace which contain column families</li>
+                                    <li>Join is not supported</li>
+                                    <li>Rows are not required to contain same number of columns</li>
+                                    <li>No foreign keys</li>
+                                  </ul>
+                                </ul>
+                              </ul>
+                            </ol>
+                          </div>
                           <h4>Crows Foot Notation with Modality</h4>
                           <div>
                             <ul>
@@ -102,8 +179,29 @@
                           <h4>Describing Relationships</h4>
                           <ul>
                             <li>Unary</li>
+                            <ul>
+                              <li>Relationship with itself</li>
+                            </ul>
                             <li>Binary</li>
+                            <ul>
+                              <li>Relationship between two entities</li>
+                            </ul>
                             <li>Ternary</li>
+                            <ul>
+                              <li>Relationship between at least three entities.</li>
+                            </ul>
+                            <li>1:1 or 1..1 (One to One)</li>
+                            <ul>
+                              <li>A single record has a relationship with a single record in another table</li>
+                            </ul>
+                            <li>1:M or 1..* (One to Many)</li>
+                            <ul>
+                              <li>One record in a table is related to more than one record in another</li>
+                            </ul>
+                            <li>M:N or *..* (Many to Many)</li>
+                            <ul>
+                              <li>A record can be related to one or more records in another table and vice versa.</li>
+                            </ul>
                           </ul>
                         </div>
                         <h3>SQL</h3>
@@ -325,6 +423,22 @@
                         <div>
                           <ul>
                             <li>Ensuring that a relation is well formed</li>
+                            <li>Dependency Concepts</li>
+                            <ul>
+                              <li>Functional dependence</li>
+                              <ul>
+                                <li>B is fully functionally dependent on A if each value of A determines only one value of B
+                                </li>
+                              </ul>
+                              <li>Partial Dependency</li>
+                              <ul>
+                                <li>Attribute is dependent on a portion of the primary key</li>
+                              </ul>
+                              <li>Transitive Dependency</li>
+                              <ul>
+                                <li>Attribute is dependent on something other than the primary key</li>
+                              </ul>
+                            </ul>
                             <li>Normal Forms:</li>
                             <ul>
                               <li>1NF</li>
@@ -339,12 +453,58 @@
                               <ul>
                                 <li>2NF + no transitive dependencies</li>
                               </ul>
+                              <li>Boyce-Codd</li>
+                              <ul>
+                                <li>Every determinant is a candidate key</li>
+                              </ul>
                             </ul>
+                          </ul>
+                          <h4>Conversion</h4>
+                          <ul>
+                            <li>To 1NF</li>
+                            <ol>
+                              <li>Eliminate repeating groups</li>
+                              <li>Identify primary keys</li>
+                              <li>Identify dependencies</li>
+                            </ol>
+                            <li>To 2NF</li>
+                            <ol>
+                              <li>Make new tables to eliminate partial dependencies</li>
+                              <li>Reassign corresponding dependent attributes</li>
+                            </ol>
+                            <li>To 3NF</li>
+                            <ol>
+                              <li>Make new tables to eliminate transitive dependencies</li>
+                              <li>Reassign corresponding dependent attributes</li>
+                            </ol>
                           </ul>
                         </div>
                         <h3>Business Intelligence</h3>
                         <div>
-                          
+                          <h4>Reporting</h4>
+                          <div>
+                            <ul>
+                              <li>Filter, sort, group, and make simple calc</li>
+                              <li>Summaries, comparisons, classifications</li>
+                              <li>Report delivery crucial</li>
+                              <li>OLAP</li>
+                              <ul>
+                                <li>OnLine Analytical Processing</li>
+                                <li>Used for dynamically examining database data</li>
+                                <li>Input = dimensions; Output = measures</li>
+                                <li>Results in OLAP Cube/Report</li>
+                              </ul>
+                            </ul>
+                          </div>
+                          <h4>Data Mining</h4>
+                          <div>
+                            <ul>
+                              <li>Analyze, predict and decision-making</li>
+                              <ul>
+                                <li>Uses sophisticated math and stats</li>
+                              </ul>
+                            </ul>
+                          </div>
                         </div>
                       </div>
                       <div class="R">
@@ -352,7 +512,9 @@
                         <h3>Resources</h3>
                         <div>
                           <ul>
-                            <li><a href="https://srm--c.na127.visual.force.com/apex/CourseArticle?id=kA00c000001DX2jCAG&groupId=&searchTerm=c175&courseCode=C175&rtn=%2Fapex%2FCommonsExpandedSearch">Supplemental Videos</a></li>
+                            <li><a href="https://youtube.com/playlist?list=PL1LIXLIF50uXWJ9alDSXClzNCMynac38g">Dr. Soper</a></li>
+                            <li><a href="https://youtube.com/playlist?list=PL_c9BZzLwBRK0Pc28IdvPQizD2mJlgoID">Caleb Curry</a></li>
+                            <li><a href="https://srm--c.na127.content.force.com/servlet/servlet.FileDownload?retURL=https%3A%2F%2Fsrm--c.na127.visual.force.com%2Fapex%2FFDP%2FCommonsExpandedChatter%3Fcode%3DC175&file=00P3x00001jvv30EAA&_CONFIRMATIONTOKEN=VmpFPSxNakF5TXkwd05TMHhNVlF4T1RveU5UbzFOeTQ0TXpsYSxQSE95a3JpNF9vWUd4Q0MzaWVzMnU0LFlUQmhOamht&common.udd.actions.ActionsUtilORIG_URI=%2Fservlet%2Fservlet.FileDownload">Study Guide</a></li>
                           </ul>
                         </div>
                       </div>
