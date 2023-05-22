@@ -103,29 +103,29 @@
                               <tbody>
                                 <tr>
                                   <td>Linear</td>
-                                  <td>𝐿(𝑥) = 3𝑥 - 5</td>
-                                  <td>𝐿(5)</td>
+                                  <td><math>𝐿(𝑥) = 3𝑥 - 5</math></td>
+                                  <td><math>𝐿(5)</math></td>
                                   <td>10</td>
                                   <td>Constant Rate</td>
                                 </tr>
                                 <tr>
                                   <td>Polynomial</td>
-                                  <td>𝑃(𝑥) = -2𝑥^2 + 3𝑥 + 5</td>
-                                  <td>𝑃(5)</td>
+                                  <td><math>𝑃(𝑥) = -2𝑥<sup>2</sup> + 3𝑥 + 5</math></td>
+                                  <td><math>𝑃(5)</math></td>
                                   <td>-30</td>
                                   <td>Constant Acceleration</td>
                                 </tr>
                                 <tr>
                                   <td>Exponential</td>
-                                  <td>𝐸(𝑥) = 2𝑒^(-0.5𝑥)</td>
-                                  <td>𝐸(5)</td>
+                                  <td><math>𝐸(𝑥) = 2𝑒<sup>-0.5𝑥</sup></math></td>
+                                  <td><math>𝐸(5)</math></td>
                                   <td>0.16</td>
                                   <td>Constant Ratio</td>
                                 </tr>
                                 <tr>
                                   <td>Logistic</td>
-                                  <td>𝐿(𝑥) = 10000/(1 + 5𝑒^(-0.2𝑥))</td>
-                                  <td>𝐿(5)</td>
+                                  <td><math>𝐿(𝑥) = 10000/(1 + 5𝑒<sup>-0.2𝑥</sup>)</math></td>
+                                  <td><math>𝐿(5)</math></td>
                                   <td>3521.87</td>
                                   <td>Stabilize/limit</td>
                                 </tr>
@@ -141,8 +141,71 @@
                           </div>
                         </div>
                         <h3>Rate of Change</h3>
+                        <div>
+                          <ul>
+                            <li>Instantaneous Rate of Change</li>
+                            <ul>
+                              <li>The change at a specific time</li>
+                            </ul>
+                            <li>Average Rate of Change</li>
+                            <ul>
+                              <li><math>𝑦<sub>2</sub> − 𝑦<sub>1</sub> / 𝑥<sub>2</sub> − 𝑥<sub>1</sub></math></li>
+                            </ul>
+                          </ul>
+                        </div>
                         <h3>Concavity</h3>
+                        <div>
+                          <ul>
+                            <li>Concave Up is a u</li>
+                            <li>Concave Down is an n</li>
+                          </ul>
+                        </div>
                         <h3>Modelling</h3>
+                        <div>
+                          <ul>
+                            <li>
+                              <strong>Strong</strong>
+                              <ol>
+                                <li>Find the furthest left 𝑥-value and the furthest right 𝑥-value</li>
+                                <li>Right 𝑥-value minus left 𝑥-value</li>
+                                <li>Extend the range of the data from 50% on the left and right.
+                                  <br>Note: If you go beyond the range, a prediction can't be made.</li>
+                                <li>Left 𝑥-value: 20<br>Right 𝑥-value: 40</li>
+                                <li>40 − 20 = 20</li>
+                                <li>(20)(0.50) = 10</li>
+                                <li>Range for extrapolation is from 10-50</li>
+                              </ol>
+                            </li>
+                            <li>
+                              <strong>Moderate</strong>
+                              <ol>
+                                <li>Find the furthest left 𝑥-value and the furthest right 𝑥-value</li>
+                                <li>Right 𝑥-value minus left 𝑥-value</li>
+                                <li>Extend the range of the data from 25% on the left and right.
+                                  <br>Note: If you go beyond the range, a prediction can't be made.</li>
+                                <li>Left 𝑥-value: 20<br>Right 𝑥-value: 40</li>
+                                <li>40 − 20 = 20</li>
+                                <li>(20)(0.25) = 5</li>
+                                <li>Range for extrapolation is from 10-45</li>
+                              </ol>
+                            </li>
+                            <li>
+                              <strong>Weak</strong>
+                              <ol>
+                                <li>Do not make prediction</li>
+                              </ol>
+                            </li>
+                          </ul>
+
+                          <p>
+                            <strong>Interpolation:</strong>
+                            Interpolation allows one to make a prediction for a situation or time within the given points in a data set.
+                          </p>
+                          <p>
+                            <strong>Extrapolation:</strong>
+                            Extrapolation allows one to make a prediction for a situation or time that extends beyond the given points in a data set.
+                          </p>
+                        </div>
                       </div>
                       <div class="R">
                         <div id="R"></div>
