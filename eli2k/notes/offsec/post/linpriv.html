@@ -92,6 +92,7 @@
       	      <h3>System</h3>
               <div>
       	       <pre><code class="language-bash">uname -a
+ls /etc/*-release
 cat /proc/version
 cat /etc/issue
 cat /proc/cpuinfo
@@ -106,7 +107,11 @@ ps aux ## if anything looks out of the ordinary run pspy and you might find smth
 ls -al /etc/init.d/
 find /etc/init.d/ ! -uid 0 -type f 2>/dev/null |xargs ls -la
 env
-echo $PATH</code></pre>
+echo $PATH
+#Installed Packages
+rpm -qa
+dpkg -l
+pacman -qe</code></pre>
               </div>
       	      <h3>User</h3>
               <div>
@@ -140,7 +145,7 @@ ss -twurp # Lists active connections and processes
 netstat -auntp
 arp -a #arp cache
 ip neigh
-netstat -ano
+netstat -ano #-l listening, -t and -u, -p pid 
 nmap -sT -p$ports portquiz.net #outbound firewall rules
 cat /etc/resolv.conf #DNS servers</code></pre>
               </div>
@@ -163,7 +168,7 @@ find / -type f -user root -perm -u=s 2>/dev/null
 find / -type f -a \( -perm -u+s -o -perm -g+s \) -exec ls -l {} \; 2> /dev/null
 #get capabilities, look for =ep
 getcap -r / 2>/dev/null
-# last edited files
+#last edited files
 find / -mmin -10 2>/dev/null | grep -Ev "^/proc"
 lsof
 #history file
@@ -187,6 +192,7 @@ cat /etc/at.allow
 cat /etc/at.deny
 cat /etc/cron.allow
 cat /etc/cron.deny*
+ps #-e all, -f format, -j jobs, -l long, -u user-oriented
 #Tampering with interesting files we have discovered
 ltrace file 2>/dev/null
 strace file 2>/dev/null
@@ -204,6 +210,12 @@ strings /dev/mem -n10 | grep -i PASS
 cat * | grep -i passw*
 cat /var/log/apache/access.log |grep -E “^user|^pass”</code></pre>
               </div>
+              <h3>Information</h3>
+              <div>
+                <pre><code class="language-bash">ls -lh /var/mail
+
+                </code></pre>
+              </div>
       	      <h2>Basic Exploitation</h2>
       	      <h3>Sudo</h3>
               <div>
@@ -214,6 +226,7 @@ sudo -l #gtfobins for quickwins
 ##compile with gcc -fPIC shared shell.so shell.c -nostartfiles
 sudo LD_PRELOAD=$PATH/shell.so vim</code></pre>
               </div>
+              <h3></h3>
       	      <h3>SUID</h3>
               <div>
       	       <pre><code class="language-bash">#suid bit
