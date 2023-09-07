@@ -81,9 +81,274 @@
                     <h3>Windows</h3>
                     <div>
                       <h4>Internals</h4>
-                      <div></div>
+                      <div>
+                        <h5>Processes</h5>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Process Components</th>
+                              <th>Purpose</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>Private Virtual Address Space</td>
+                              <td>Virtual memory addresses that the process is allocated.</td>
+                            </tr>
+                            <tr>
+                              <td>Executable Program</td>
+                              <td>Defines code and data stored in the virtual address space.</td>
+                            </tr>
+                            <tr>
+                              <td>Open Handles</td>
+                              <td>Defines handles to system resources accessible to the process.</td>
+                            </tr>
+                            <tr>
+                              <td>Security Context</td>
+                              <td>The access token defines the user, security groups, privileges, and other security information.</td>
+                            </tr>
+                            <tr>
+                              <td>Process ID</td>
+                              <td>Unique numerical identifier of the process.</td>
+                            </tr>
+                            <tr>
+                              <td>Threads</td>
+                              <td>Section of a process scheduled for execution.</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Components of a Process in Memory</th>
+                              <th>Purpose</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>Code</td>
+                              <td>Code to be executed by the process.</td>
+                            </tr>
+                            <tr>
+                              <td>Global Variables</td>
+                              <td>Stored variables.</td>
+                            </tr>
+                            <tr>
+                              <td>Process Heap</td>
+                              <td>Defines the heap where data is stored.</td>
+                            </tr>
+                            <tr>
+                              <td>Process Resources</td>
+                              <td>Defines further resources of the process.</td>
+                            </tr>
+                            <tr>
+                              <td>Environment Block</td>
+                              <td>Data structure to define process information.</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <h5>Threads</h5>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Component</th>
+                              <th>Purpose</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>Stack</td>
+                              <td>All data relevant and specific to the thread (exceptions, procedure calls, etc.)</td>
+                            </tr>
+                            <tr>
+                              <td>Thread Local Storage</td>
+                              <td>Pointers for allocating storage to a unique data environment</td>
+                            </tr>
+                            <tr>
+                              <td>Stack Argument</td>
+                              <td>Unique value assigned to each thread</td>
+                            </tr>
+                            <tr>
+                              <td>Context Structure</td>
+                              <td>Holds machine register values maintained by the kernel</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <h5>Virtual Memory</h5>
+                        <ul>
+                          <li>Provides each process with a private virtual address space</li>
+                          <li>A memory manager translates virtual and physical addresses</li>
+                          <li>The theoretical maximum virtual address space is 4 GB on a 32-bit x86 system and 256 TB on a 64-bit modern system</li>
+                          <li>The address space is split in half, bottom for processes and top for OS</li>
+                          <ul>
+                            <li>Administrators can alter this allocation layout for applications that require a larger address space through settings (increaseUserVA) or the AWE (Address Windowing Extensions)</li>
+                          </ul>
+                        </ul>
+                        <h5>DLLs</h5>
+                        <ul>
+                          <li>A library that contains code and data that can be used by more than one program at the same time</li>
+                          <li>When a DLL is loaded as a function in a program, the DLL is assigned as a dependency</li>
+                          <li>DLLs can be loaded in a program using load-time dynamic linking (explicit calls by using header (.h) and import library (.lib) file) or run-time dynamic linking (a separate function (LoadLibrary or LoadLibraryEx) loads the DLL and called using GetProcAddress).</li>
+                        </ul>
+                        <h5>PE format</h5>
+                        <ul>
+                          <li>The PE (Portable Executable) and COFF (Common Object File Format) files make up the PE format</li>
+                          <li>The PE format defines the information about the executable, stored data, and the structure of how data components are stored.</li>
+                        </ul>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Component</th>
+                              <th>Description</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>DOS Header</td>
+                              <td>Initial part of the PE file with DOS-specific information.</td>
+                            </tr>
+                            <tr>
+                              <td>MZ DOS Header</td>
+                              <td>Marked by "MZ" signature, it is the start of the DOS header.</td>
+                            </tr>
+                            <tr>
+                              <td>DOS Stub</td>
+                              <td>Run by default at the beginning of a file that prints a compatibility message.</td>
+                            </tr>
+                            <tr>
+                              <td>PE File Header</td>
+                              <td>Contains information about the structure and attributes of the PE file.</td>
+                            </tr>
+                            <tr>
+                              <td>Image Optional Header</td>
+                              <td>Additional information about the PE file, including the entry point, image base, and more.</td>
+                            </tr>
+                            <tr>
+                              <td>Data Dictionaries</td>
+                              <td>Tables that store various data structures and information about the PE file.</td>
+                            </tr>
+                            <tr>
+                              <td>Section Table</td>
+                              <td>Descriptions of each section in the PE file, including code and data sections.</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <p>The Section table has the following sections:</p>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Section</th>
+                              <th>Purpose</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>.text</td>
+                              <td>Contains executable code and the entry point for the program.</td>
+                            </tr>
+                            <tr>
+                              <td>.data</td>
+                              <td>Contains initialized data such as strings, variables, and other data.</td>
+                            </tr>
+                            <tr>
+                              <td>.rdata or .idata</td>
+                              <td>Contains information related to imports, including references to Windows API functions and DLLs.</td>
+                            </tr>
+                            <tr>
+                              <td>.reloc</td>
+                              <td>Contains relocation information used to adjust addresses when the PE file is loaded at a different base address.</td>
+                            </tr>
+                            <tr>
+                              <td>.rsrc</td>
+                              <td>Contains application resources such as images, icons, and other non-executable data.</td>
+                            </tr>
+                            <tr>
+                              <td>.debug</td>
+                              <td>Contains debug information used for debugging and symbol resolution.</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
                       <h4>API</h4>
-                      <div></div>
+                      <div>
+                        <h5>Subsystem and Hardware Interaction</h5>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Mode</th>
+                              <th>Access to Hardware</th>
+                              <th>Memory Access</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>User Mode</td>
+                              <td>No direct hardware access</td>
+                              <td>Access to "owned" memory locations</td>
+                            </tr>
+                            <tr>
+                              <td>Kernel Mode</td>
+                              <td>Direct hardware access</td>
+                              <td>Access to entire physical memory</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <h5>Components of the Windows API</h5>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Layer</th>
+                              <th>Explanation</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>API</td>
+                              <td>A top-level/general term or theory used to describe any call found in the Win32 API structure.</td>
+                            </tr>
+                            <tr>
+                              <td>Header files or imports</td>
+                              <td>Defines libraries to be imported at run-time, defined by header files or library imports. Uses pointers to obtain the function address.</td>
+                            </tr>
+                            <tr>
+                              <td>Core DLLs</td>
+                              <td>A group of four DLLs that define call structures (KERNEL32, USER32, and ADVAPI32). These DLLs define kernel and user services that are not contained in a single subsystem.</td>
+                            </tr>
+                            <tr>
+                              <td>Supplemental DLLs</td>
+                              <td>Other DLLs defined as part of the Windows API. Control separate subsystems of the Windows OS. Approximately 36 other defined DLLs (e.g., NTDLL, COM, FVEAPI, etc.).</td>
+                            </tr>
+                            <tr>
+                              <td>Call Structures</td>
+                              <td>Defines the API call itself and parameters of the call.</td>
+                            </tr>
+                            <tr>
+                              <td>API Calls</td>
+                              <td>The API call used within a program, with function addresses obtained from pointers.</td>
+                            </tr>
+                            <tr>
+                              <td>In/Out Parameters</td>
+                              <td>The parameter values that are defined by the call structures.</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <h5>OS Libraries</h5>
+                        <p>ASLR obscures memory address locations. P/Invoke and windows.h are two common ways to overcome the limitations introduced by ASLR.</p>
+                        <ul>
+                          <li>Windows Header File</li>
+                          <ul>
+                            <li>Once the windows.h file is included at the top of an unmanaged program; any Win32 function can be called.</li>
+                          </ul>
+                          <li>P/Invoke</li>
+                          <ul>
+                            <li>P/invoke provides tools to handle the entire process of invoking an unmanaged function from managed code or, in other words, calling the Win32 API.</li>
+                          </ul>
+                        </ul>
+                        <h5>API Call Structure</h5>
+                        <h5>C API Implementations</h5>
+                        <h5>.NET and PowerShell API Implementations</h5>
+                        <h5>Commonly Abused API Calls</h5>
+                      </div>
                       <h4>UAC</h4>
                       <div></div>
                     </div>
