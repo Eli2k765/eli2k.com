@@ -78,7 +78,7 @@
                 <article>
                   <div id="contain">
                     <h2>Host</h2>
-                    <h3>Windows</h3>
+                    <h3>Windows Overview</h3>
                     <div>
                       <h4>Internals</h4>
                       <div>
@@ -147,6 +147,64 @@
                             </tr>
                           </tbody>
                         </table>
+                        <ul>
+                          <li>Common Process Injection Steps</li>
+                          <ul>
+                            <li>Shellcode Injection</li>
+                            <ol>
+                              <li>Open a target process with all access rights.</li>
+                              <ul>
+                                <li>OpenProcess</li>
+                              </ul>
+                              <li>Allocate target process memory for the shellcode.</li>
+                              <ul>
+                                <li>VirtualAllocEx</li>
+                              </ul>
+                              <li>Write shellcode to allocated memory in the target process.</li>
+                              <ul>
+                                <li>WriteProcessMemory</li>
+                              </ul>
+                              <li>Execute the shellcode using a remote thread.</li>
+                              <ul>
+                                <li>CreateRemoteThread</li>
+                              </ul>
+                            </ol>
+                            <li>Process Hollowing</li>
+                            <ol>
+                              <li>Create a target process in a suspended state.</li>
+                              <ul>
+                                <li>CreateProcessA</li>
+                              </ul>
+                              <li>Open a malicious image.</li>
+                              <ul>
+                                <li>CreateFileA</li>
+                                <li>GetFileSize</li>
+                                <li>VirtualAlloc</li>
+                                <li>ReadFile</li>
+                              </ul>
+                              <li>Un-map legitimate code from process memory.</li>
+                              <ul>
+                                <li>GetThreadContext</li>
+                                <li>ReadProcessMemory</li>
+                                <li>GetModuleHandleA</li>
+                                <li>ZwUnmapViewOfSection</li>
+                              </ul>
+                              <li>Allocate memory locations for malicious code and write each section into the address space.</li>
+                              <ul>
+                                <li>VirtualAlloc</li>
+                                <li>WriteProcessMemory</li>
+                              </ul>
+                              <li>Set an entry point for the malicious code.</li>
+                              <ul>
+                                <li>SetThreadContext</li>
+                              </ul>
+                              <li>Take the target process out of a suspended state.</li>
+                              <ul>
+                                <li>ResumeThread</li>
+                              </ul>
+                            </ol>
+                          </ul>
+                        </ul>
                         <h5>Threads</h5>
                         <table>
                           <thead>
@@ -174,6 +232,50 @@
                             </tr>
                           </tbody>
                         </table>
+                        <ul> 
+                          <li>Thread Execution Hijacking</li>
+                          <ol>
+                            <li>Locate and open a target process to control.</li>
+                            <ul>
+                              <li>OpenProcess</li>
+                            </ul>
+                            <li>Allocate memory region for malicious code.</li>
+                            <ul>
+                              <li>VirtualAllocEx</li>
+                            </ul>
+                            <li>Write malicious code to allocated memory.</li>
+                            <ul>
+                              <li>WriteProcessMemory</li>
+                            </ul>
+                            <li>Identify the thread ID of the target thread to hijack.</li>
+                            <ul>
+                              <li>CreateToolhelp32Snapshot</li>
+                              <li>Thread32First</li>
+                              <li>Thread32Next</li>
+                            </ul>
+                            <li>Open the target thread.</li>
+                            <ul>
+                              <li>OpenThread</li>
+                            </ul>
+                            <li>Suspend the target thread.</li>
+                            <ul>
+                              <li>SuspendThread</li>
+                            </ul>
+                            <li>Obtain the thread context.</li>
+                            <ul>
+                              <li>GetThreadContext</li>
+                            </ul>
+                            <li>Update the instruction pointer to the malicious code.</li>
+                            <li>Rewrite the target thread context.</li>
+                            <ul>
+                              <li>SetThreadContext</li>
+                            </ul>
+                            <li>Resume the hijacked thread.</li>
+                            <ul>
+                              <li>ResumeThread</li>
+                            </ul>
+                          </ol>
+                        </ul>
                         <h5>Virtual Memory</h5>
                         <ul>
                           <li>Provides each process with a private virtual address space</li>
@@ -189,6 +291,37 @@
                           <li>A library that contains code and data that can be used by more than one program at the same time</li>
                           <li>When a DLL is loaded as a function in a program, the DLL is assigned as a dependency</li>
                           <li>DLLs can be loaded in a program using load-time dynamic linking (explicit calls by using header (.h) and import library (.lib) file) or run-time dynamic linking (a separate function (LoadLibrary or LoadLibraryEx) loads the DLL and called using GetProcAddress).</li>
+                        </ul>
+                        <ul>
+                          <li>Dynamic-link Library Injection (DLL Injection)</li>
+                          <ol>
+                            <li>Locate a target process to inject.</li>
+                            <ul>
+                              <li>getProcessId</li>
+                              <li>CreateToolhelp32Snapshot</li>
+                              <li>Process32First</li>
+                              <li>Process32Next</li>
+                            </ul>
+                            <li>Open the target process.</li>
+                            <ul>
+                              <li>OpenProcess</li>
+                            </ul>
+                            <li>Allocate memory region for malicious DLL.</li>
+                            <ul>
+                              <li>VirtualAllocEx</li>
+                            </ul>
+                            <li>Write the malicious DLL to allocated memory.</li>
+                            <ul>
+                              <li>WriteProcessMemory</li>
+                            </ul>
+                            <li>Load and execute the malicious DLL.</li>
+                            <ul>
+                              <li>LoadLibrary</li>
+                              <li>GetProcAddress</li>
+                              <li>GetModuleHandle</li>
+                              <li>CreateRemoteThread</li>
+                            </ul>
+                          </ol>
                         </ul>
                         <h5>PE format</h5>
                         <ul>
@@ -251,12 +384,20 @@
                               <td>Contains initialized data such as strings, variables, and other data.</td>
                             </tr>
                             <tr>
-                              <td>.rdata or .idata</td>
-                              <td>Contains information related to imports, including references to Windows API functions and DLLs.</td>
+                              <td>.rdata</td>
+                              <td>Read Only</td>
+                            </tr>
+                            <tr>
+                              <td>.edata</td>
+                              <td>Exportable objects</td>
+                            </tr>
+                            <tr>
+                              <td>.idata</td>
+                              <td>Imported objects</td>
                             </tr>
                             <tr>
                               <td>.reloc</td>
-                              <td>Contains relocation information used to adjust addresses when the PE file is loaded at a different base address.</td>
+                              <td>Relocation information used to adjust addresses when the PE file is loaded at a different base address.</td>
                             </tr>
                             <tr>
                               <td>.rsrc</td>
@@ -268,6 +409,13 @@
                             </tr>
                           </tbody>
                         </table>
+                        <ul>
+                          <li>Defining the shellcode as a local variable within the main function will store it in the .TEXT PE section.</li>
+                          <li>Defining the shellcode as a global variable will store it in the .Data section.</li>
+                          <li>Another technique involves storing the shellcode as a raw binary in an icon image and linking it within the code, so in this case, it shows up in the .rsrc Data section.</li>
+                          <li>We can add a custom data section to store the shellcode.</li>
+                        </ul>
+
                       </div>
                       <h4>API</h4>
                       <div>
@@ -332,6 +480,11 @@
                             </tr>
                           </tbody>
                         </table>
+                        <h5>Call Structures</h5>
+                        <ul>
+                          <li><a href="https://learn.microsoft.com/en-us/windows/win32/apiindex/windows-api-list">Windows API Index</a></li>
+                          <li><a href="http://pinvoke.net/">PInvoke</a></li>
+                        </ul>
                         <h5>OS Libraries</h5>
                         <p>ASLR obscures memory address locations. P/Invoke and windows.h are two common ways to overcome the limitations introduced by ASLR.</p>
                         <ul>
@@ -344,18 +497,107 @@
                             <li>P/invoke provides tools to handle the entire process of invoking an unmanaged function from managed code or, in other words, calling the Win32 API.</li>
                           </ul>
                         </ul>
-                        <h5>API Call Structure</h5>
-                        <h5>C API Implementations</h5>
-                        <h5>.NET and PowerShell API Implementations</h5>
                         <h5>Commonly Abused API Calls</h5>
+                        <ul>
+                          <li><a href="https://malapi.io/">Extensive List</a></li>
+                        </ul>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>API Call</th>
+                              <th>Explanation</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>LoadLibraryA</td>
+                              <td>Maps a specified DLL into the address space of the calling process.</td>
+                            </tr>
+                            <tr>
+                              <td>GetUserNameA</td>
+                              <td>Retrieves the name of the user associated with the current thread.</td>
+                            </tr>
+                            <tr>
+                              <td>GetComputerNameA</td>
+                              <td>Retrieves a NetBIOS or DNS name of the local computer.</td>
+                            </tr>
+                            <tr>
+                              <td>GetVersionExA</td>
+                              <td>Obtains information about the version of the operating system currently running.</td>
+                            </tr>
+                            <tr>
+                              <td>GetModuleFileNameA</td>
+                              <td>Retrieves the fully qualified path for the file of the specified module and process.</td>
+                            </tr>
+                            <tr>
+                              <td>GetStartupInfoA</td>
+                              <td>Retrieves contents of STARTUPINFO structure (window station, desktop, standard handles, and appearance of a process).</td>
+                            </tr>
+                            <tr>
+                              <td>GetModuleHandle</td>
+                              <td>Returns a module handle for the specified module if mapped into the calling process's address space.</td>
+                            </tr>
+                            <tr>
+                              <td>GetProcAddress</td>
+                              <td>Returns the address of a specified exported DLL function.</td>
+                            </tr>
+                            <tr>
+                              <td>VirtualProtect</td>
+                              <td>Changes the protection on a region of memory in the virtual address space of the calling process.</td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                       <h4>UAC</h4>
                       <div></div>
                     </div>
                     <h3>Evasion Techniques</h3>
                     <div>
+                      <h4>AV Review</h4>
+                      <div>
+                        <ul>
+                          <li>Static Detection</li>
+                          <ul>
+                            <li>Uses pattern-matching techniques in the detection, such as finding a unique string, CRC (Checksums), sequence of bytecode/Hex values, and Cryptographic hashes (MD5, SHA1, etc.)</li>
+                          </ul>
+                          <li>Dynamic Detection</li>
+                          <ul>
+                            <li>Checks files at runtime by using Windows Hooks to inspect api and application calls or by sandboxing apps and running them to observe.</li>
+                          </ul>
+                          <li>Heuristics Detection</li>
+                          <ul>
+                            <li>Static</li>
+                            <ul>
+                              <li>Decompiling (if possible) and extracting the source code of the malicious software.</li>
+                            </ul>
+                            <li>Dynamic</li>
+                            <ul>
+                              <li>Uses predefined behavioral rules</li>
+                            </ul>
+                          </ul>
+                        </ul>
+                      </div>
                       <h4>Shellcode</h4>
-                      <div></div>
+                      <div>
+                        <h5>Creating Shellcode</h5>
+                        <ul>
+                          <li>We have to know what values we need to set in different processor registers to make syscalls</li>
+                          <ul>
+                            <li>For x64 Linux:</li>
+                            <ul>
+                              <li>The rax register is used to indicate the function in the kernel</li>
+                              <li>Parameters are set through the rdi, rsi and rdx registers</li>
+                              <li><a href="https://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/">Call Table</a></li>
+                            </ul>
+                          </ul>
+                          <li>We need to define a section and a start</li>
+                          <li>jmp to function that has a call to the function that sets all the values</li>
+                          <li>Compile: nasm -f elf64 file.asm</li>
+                          <li>extract text section: objcopy -j .text -O binary file file.text</li>
+                          <li>convert to hex: xxd -i file.text</li>
+                        </ul>
+                        <h5>Encoding, Encrypting, Packing and Binding</h5>
+                      </div>
                       <h4>Obfuscation</h4>
                       <div></div>
                       <h4>Signature</h4>

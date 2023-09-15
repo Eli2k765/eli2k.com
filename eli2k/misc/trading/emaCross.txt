@@ -1,0 +1,44 @@
+//God is dead, but EMA Cross Strategy will never die
+//@version=5
+strategy('EMA 7/20 Crossover Strategy with optional delay', overlay=true, calc_on_every_tick=true, currency=currency.USD)
+
+// INPUTS:
+emaFast = input.int(title='Fast EMA', defval=7, minval=1, maxval=9999)
+emaSlow = input.int(title='Slow EMA', defval=20, minval=1, maxval=9999)
+tradeDirection = input.string(title='Trade Direction', options=['Long', 'Short', 'Both'], defval='Long')
+startDate = input.time(title='Start Date', defval=timestamp('01 Jan 2023 00:00'))
+endDate = input.time(title='End Date', defval=timestamp('31 Dec 2170 23:59'))
+minDaysBetweenTrades = input(title='Min Days Between Trades', defval=0)
+
+// CALCULATIONS:
+fastEMA = ta.ema(close, emaFast)
+slowEMA = ta.ema(close, emaSlow)
+
+// PLOT:
+plot(series=fastEMA, color=color.new(color.purple, 0), linewidth=2)
+plot(series=slowEMA, color=color.new(color.red, 0), linewidth=2)
+
+// CONDITIONS:
+inDateRange = time >= startDate and time < endDate
+longOK = tradeDirection == 'Long' or tradeDirection == 'Both'
+shortOK = tradeDirection == 'Short' or tradeDirection == 'Both'
+longCondition = ta.crossover(fastEMA, slowEMA)
+shortCondition = ta.crossunder(fastEMA, slowEMA)
+
+// ORDERS:
+var float lastTradeTime = na
+
+if longCondition and inDateRange and (na(lastTradeTime) or time - lastTradeTime >= minDaysBetweenTrades * 24 * 60 * 60 * 1000)
+    strategy.entry(id='long', direction=strategy.long, when=longOK)
+    lastTradeTime := time
+    lastTradeTime
+
+if shortCondition and inDateRange and (na(lastTradeTime) or time - lastTradeTime >= minDaysBetweenTrades * 24 * 60 * 60 * 1000)
+    strategy.entry(id='short', direction=strategy.short, when=shortOK)
+    lastTradeTime := time
+    lastTradeTime
+
+if strategy.position_size > 0 and shortCondition
+    strategy.exit(id='exit long', stop=close)
+if strategy.position_size < 0 and longCondition
+    strategy.exit(id='exit short', stop=close)
