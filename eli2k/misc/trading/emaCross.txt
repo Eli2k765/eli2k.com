@@ -1,44 +1,71 @@
-//God is dead, but EMA Cross Strategy will never die
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © eli2k
+
 //@version=5
-strategy('EMA 7/20 Crossover Strategy with optional delay', overlay=true, calc_on_every_tick=true, currency=currency.USD)
+strategy('EMA-CCI-RSI Swing Strategy', overlay=true, calc_on_every_tick=true, currency=currency.USD, default_qty_value = 100, default_qty_type = strategy.percent_of_equity, initial_capital = 5000)
 
 // INPUTS:
-emaFast = input.int(title='Fast EMA', defval=7, minval=1, maxval=9999)
-emaSlow = input.int(title='Slow EMA', defval=20, minval=1, maxval=9999)
-tradeDirection = input.string(title='Trade Direction', options=['Long', 'Short', 'Both'], defval='Long')
-startDate = input.time(title='Start Date', defval=timestamp('01 Jan 2023 00:00'))
+sourceData = input(close, title="Source")
+fastEMALength = input.int(title='Fast EMA Length', defval=1, minval=1, maxval=9999)
+slowEMALength = input.int(title='Slow EMA Length', defval=36, minval=1, maxval=9999)
+cciLength = input.int(title='CCI Length', defval=14, minval=1, maxval=9999)
+cciThreshold = input.int(title='CCI Threshold', defval=45)
+rsiLength = input.int(title='RSI Length', defval=13, minval=1, maxval=9999)
+rsiBearThreshold = input.int(title='RSI Bear Threshold', defval=80)
+rsiBullThreshold = input.int(title='RSI Bull Threshold', defval=20)
+tradeDirection = input.string(title='Trade Direction', options=['Long', 'Short', 'Both'], defval='Both')
+startDate = input.time(title='Start Date', defval=timestamp('01 Jan 2020 00:00'))
 endDate = input.time(title='End Date', defval=timestamp('31 Dec 2170 23:59'))
-minDaysBetweenTrades = input(title='Min Days Between Trades', defval=0)
+minDaysBetweenTrades = input(title='Min Days Between Trades', defval=2)
 
-// CALCULATIONS:
-fastEMA = ta.ema(close, emaFast)
-slowEMA = ta.ema(close, emaSlow)
+// EMA
+fastEMA = ta.ema(sourceData, fastEMALength)
+slowEMA = ta.ema(sourceData, slowEMALength)
 
-// PLOT:
-plot(series=fastEMA, color=color.new(color.purple, 0), linewidth=2)
-plot(series=slowEMA, color=color.new(color.red, 0), linewidth=2)
+// CCI
+ma = ta.sma(sourceData, cciLength)
+cci = (sourceData - ma) / (0.015 * ta.dev(sourceData, cciLength))
+
+// RSI
+up = ta.rma(math.max(ta.change(sourceData), 0), rsiLength)
+down = ta.rma(-math.min(ta.change(sourceData), 0), rsiLength)
+rsi = down == 0 ? 100 : up == 0 ? 0 : 100 - (100 / (1 + up / down))
 
 // CONDITIONS:
 inDateRange = time >= startDate and time < endDate
-longOK = tradeDirection == 'Long' or tradeDirection == 'Both'
-shortOK = tradeDirection == 'Short' or tradeDirection == 'Both'
-longCondition = ta.crossover(fastEMA, slowEMA)
-shortCondition = ta.crossunder(fastEMA, slowEMA)
+longAllowed = tradeDirection == 'Long' or tradeDirection == 'Both'
+shortAllowed = tradeDirection == 'Short' or tradeDirection == 'Both'
+longSignal = ta.crossover(fastEMA, slowEMA) and cci > cciThreshold
+shortSignal = ta.crossunder(fastEMA, slowEMA) and cci < -cciThreshold
 
 // ORDERS:
 var float lastTradeTime = na
 
-if longCondition and inDateRange and (na(lastTradeTime) or time - lastTradeTime >= minDaysBetweenTrades * 24 * 60 * 60 * 1000)
-    strategy.entry(id='long', direction=strategy.long, when=longOK)
-    lastTradeTime := time
-    lastTradeTime
+if longSignal and inDateRange and (na(lastTradeTime) or time - lastTradeTime >= minDaysBetweenTrades * 24 * 60 * 60 * 1000)
+    if longAllowed
+        strategy.entry(id='long', direction=strategy.long)
+        lastTradeTime := time
 
-if shortCondition and inDateRange and (na(lastTradeTime) or time - lastTradeTime >= minDaysBetweenTrades * 24 * 60 * 60 * 1000)
-    strategy.entry(id='short', direction=strategy.short, when=shortOK)
-    lastTradeTime := time
-    lastTradeTime
+if shortSignal and inDateRange and (na(lastTradeTime) or time - lastTradeTime >= minDaysBetweenTrades * 24 * 60 * 60 * 1000)
+    if shortAllowed
+        strategy.entry(id='short', direction=strategy.short)
+        lastTradeTime := time
 
-if strategy.position_size > 0 and shortCondition
+if strategy.position_size > 0 and (shortSignal or rsi >= rsiBearThreshold)
     strategy.exit(id='exit long', stop=close)
-if strategy.position_size < 0 and longCondition
+
+if strategy.position_size < 0 and (longSignal or rsi <= rsiBullThreshold)
     strategy.exit(id='exit short', stop=close)
+
+// PLOT:
+fastPlot = plot(series=fastEMA, color=color.purple, linewidth=1)
+slowPlot = plot(series=slowEMA, color=color.red, linewidth=1)
+
+// FILL:
+fillColor = color.new(color.white, 100)
+
+if strategy.position_size > 0
+    fillColor := color.new(color.purple, 65)
+if strategy.position_size < 0 
+    fillColor := color.new(color.red, 65)
+fill(fastPlot, slowPlot, color = fillColor, title = "EMA Cloud Fill")
