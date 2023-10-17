@@ -78,8 +78,8 @@
                 exploits and a list of common kernel exploits along
                 with the versions commonly vulnerable.</p>
                 <p>I added a search bar so you can easily search
-                for exploits. Just search the version of Windows
-                and it'll take you to the first occurence.</p>
+                for exploits. Just click "Show all", then search the version of Windows
+                and it'll take you to the first occurence and it should highlight the rest.</p>
                 <div id="contain">
                   <div class="tags">
                     <span id="all"><button class=
@@ -390,196 +390,224 @@ PsExec64.exe -s -i regedit
                     </div>
                   </div>
                   <div class="Kernel">
-                    <h2>Kernel Exploits</h2>
-                    <h3>MS09-012 "Churrasco"</h3>
-                    <h4>Affected Versions</h4>
-                    <ul>
-                      <li>Microsoft Windows 2000 Service Pack
-                      4</li>
-                      <li>Windows XP Service Pack 2 and Windows XP
-                      Service Pack 3</li>
-                      <li>Windows XP Professional x64 Edition and
-                      Windows XP Professional x64 Edition Service
-                      Pack 2</li>
-                      <li>Windows Server 2003 Service Pack 1 and
-                      Windows Server 2003 Service Pack 2</li>
-                      <li>Windows Server 2003 x64 Edition and
-                      Windows Server 2003 x64 Edition Service Pack
-                      2</li>
-                      <li>Windows Server 2003 with SP1 for
-                      Itanium-based Systems and Windows Server 2003
-                      with SP2 for Titanium-based Systems</li>
-                      <li>Windows Vista and Windows Vista Service
-                      Pack 1</li>
-                      <li>Windows Vista x64 Edition and Windows
-                      Vista x64 Edition Service Pack 1</li>
-                      <li>Windows Server 2008 for 32-bit
-                      Systems</li>
-                      <li>Windows Server 2008 for x64-based
-                      Systems</li>
-                      <li>Windows Server 2008 for Itanium-based
-                      Systems</li>
-                    </ul>
-                    <h4>Reliable Exploits</h4>
-                    <ul>
-                      <li>I use <a href=
-                      "https://github.com/Re4son/Churrasco/">churrasco.exe</a>
-                      </li>
-                    </ul>
-                    <h3>MS10-015 "KiTrap0D"</h3>
-                    <h4>Affected Versions</h4>
-                    <ul>
-                      <li>Windows Server 2003, Windows Server 2008,
-                      7, XP</li>
-                      <li>Windows 2000 Service Pack 4</li>
-                      <li>Windows XP Service Pack 2 and Windows XP
-                      Service Pack 3</li>
-                      <li>Windows XP Professional x64 Edition
-                      Service Pack 2</li>
-                      <li>Windows Server 2003 Service Pack 2</li>
-                      <li>Windows Server 2003 x64 Edition Service
-                      Pack 2</li>
-                      <li>Windows Server 2003 with SP2 for
-                      Itanium-based Systems</li>
-                      <li>Windows Vista Windows Vista Service Pack
-                      1 and Windows Vista Service Pack 2</li>
-                      <li>Windows Vista x64 Edition Windows Vista
-                      x64 Edition Service Pack 1 and Windows Vista
-                      x64 Edition Service Pack 2</li>
-                      <li>Windows Server 2008 for 32-bit Systems
-                      and Windows Server 2008 for 32-bit</li>
-                      <li>Systems Service Pack 2*</li>
-                      <li>Windows Server 2008 for x64-based Systems
-                      and Windows Server 2008 for x64-based Systems
-                      Service Pack 2*</li>
-                      <li>Windows Server 2008 for Itanium-based
-                      Systems and Windows Server 2008 for
-                      Itanium-based Systems Service Pack 2</li>
-                      <li>Windows 7 for 32-bit Systems</li>
-                    </ul>
-                    <h4>Reliable Exploits</h4>
+                  <h2>Kernel Exploits</h2>
+                  <h3>MS09-012 "Churrasco"</h3>
                     <div>
-                      <p>I haven't been able to find an exploit that
-                      will elevate the current shell, they all seem
-                      to spawn a new shell. If you know of one let me
-                      know!</p>
-                      <ul>
-                        <li>
-                          <a href=
-                          "https://github.com/am0nsec/exploit/tree/master/windows/privs/MS10-015-KiTrap0D">
-                          vdmallowed.exe and vdmexploit.dll</a>
-                        </li>
-                        <li>
-                          <a href=
-                          "https://github.com/Re4son/KiTrapOD">same
-                          as above, except from Re4son</a>
-                        </li>
-                      </ul>
+                      <h4>Affected Versions</h4>
+                      <div>
+                        <ul>
+                          <li>Microsoft Windows 2000 Service Pack
+                          4</li>
+                          <li>Windows XP Service Pack 2 and Windows XP
+                          Service Pack 3</li>
+                          <li>Windows XP Professional x64 Edition and
+                          Windows XP Professional x64 Edition Service
+                          Pack 2</li>
+                          <li>Windows Server 2003 Service Pack 1 and
+                          Windows Server 2003 Service Pack 2</li>
+                          <li>Windows Server 2003 x64 Edition and
+                          Windows Server 2003 x64 Edition Service Pack
+                          2</li>
+                          <li>Windows Server 2003 with SP1 for
+                          Itanium-based Systems and Windows Server 2003
+                          with SP2 for Titanium-based Systems</li>
+                          <li>Windows Vista and Windows Vista Service
+                          Pack 1</li>
+                          <li>Windows Vista x64 Edition and Windows
+                          Vista x64 Edition Service Pack 1</li>
+                          <li>Windows Server 2008 for 32-bit
+                          Systems</li>
+                          <li>Windows Server 2008 for x64-based
+                          Systems</li>
+                          <li>Windows Server 2008 for Itanium-based
+                          Systems</li>
+                        </ul>
+                      </div>
+                      <h4>Reliable Exploits</h4>
+                      <div>
+                        <ul>
+                          <li>I use <a href=
+                          "https://github.com/Re4son/Churrasco/">churrasco.exe</a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <h3>MS10-015 "KiTrap0D"</h3>
+                    <div>
+                      <h4>Affected Versions</h4>
+                      <div>
+                        <ul>
+                          <li>Windows Server 2003, Windows Server 2008,
+                          7, XP</li>
+                          <li>Windows 2000 Service Pack 4</li>
+                          <li>Windows XP Service Pack 2 and Windows XP
+                          Service Pack 3</li>
+                          <li>Windows XP Professional x64 Edition
+                          Service Pack 2</li>
+                          <li>Windows Server 2003 Service Pack 2</li>
+                          <li>Windows Server 2003 x64 Edition Service
+                          Pack 2</li>
+                          <li>Windows Server 2003 with SP2 for
+                          Itanium-based Systems</li>
+                          <li>Windows Vista Windows Vista Service Pack
+                          1 and Windows Vista Service Pack 2</li>
+                          <li>Windows Vista x64 Edition Windows Vista
+                          x64 Edition Service Pack 1 and Windows Vista
+                          x64 Edition Service Pack 2</li>
+                          <li>Windows Server 2008 for 32-bit Systems
+                          and Windows Server 2008 for 32-bit</li>
+                          <li>Systems Service Pack 2*</li>
+                          <li>Windows Server 2008 for x64-based Systems
+                          and Windows Server 2008 for x64-based Systems
+                          Service Pack 2*</li>
+                          <li>Windows Server 2008 for Itanium-based
+                          Systems and Windows Server 2008 for
+                          Itanium-based Systems Service Pack 2</li>
+                          <li>Windows 7 for 32-bit Systems</li>
+                        </ul>
+                      </div>
+                      <h4>Reliable Exploits</h4>
+                      <div>
+                        <p>I haven't been able to find an exploit that
+                        will elevate the current shell, they all seem
+                        to spawn a new shell. If you know of one let me
+                        know!</p>
+                        <ul>
+                          <li>
+                            <a href=
+                            "https://github.com/am0nsec/exploit/tree/master/windows/privs/MS10-015-KiTrap0D">
+                            vdmallowed.exe and vdmexploit.dll</a>
+                          </li>
+                          <li>
+                            <a href=
+                            "https://github.com/Re4son/KiTrapOD">same
+                            as above, except from Re4son</a>
+                          </li>
+                        </ul>
+                      </div>
                     </div>
                     <h3>MS10-059 "Churraskito"</h3>
-                    <h4>Affected Versions</h4>
-                    <ul>
-                      <li>Windows Vista Service Pack 1 and Windows
-                      Vista Service Pack 2</li>
-                      <li>Windows Vista x64 Edition Service Pack 1
-                      and Windows Vista x64 Edition Service Pack
-                      2</li>
-                      <li>Windows Server 2008 for 32-bit Systems
-                      and Windows Server 2008 for 32-bit Systems
-                      Service Pack 2*</li>
-                      <li>Windows Server 2008 for x64-based Systems
-                      and Windows Server 2008 for x64-based Systems
-                      Service Pack 2*</li>
-                      <li>Windows Server 2008 for Itanium-based
-                      Systems and Windows Server 2008 for
-                      Itanium-based Systems Service Pack 2</li>
-                      <li>Windows 7 for 32-bit Systems</li>
-                      <li>Windows 7 for x64-based Systems</li>
-                      <li>Windows Server 2008 R2 for x64-based
-                      Systems*</li>
-                      <li>Windows Server 2008 R2 for Itanium-based
-                      Systems</li>
-                    </ul>
-                    <h4>Reliable Exploits</h4>
-                    <ul>
-                      <li>
-                        <a href=
-                        "https://github.com/SecWiki/windows-kernel-exploits/tree/master/MS10-059">
-                        Download the zip</a>
-                      </li>
-                    </ul>
+                    <div>
+                      <h4>Affected Versions</h4>
+                      <div>
+                        <ul>
+                          <li>Windows Vista Service Pack 1 and Windows
+                          Vista Service Pack 2</li>
+                          <li>Windows Vista x64 Edition Service Pack 1
+                          and Windows Vista x64 Edition Service Pack
+                          2</li>
+                          <li>Windows Server 2008 for 32-bit Systems
+                          and Windows Server 2008 for 32-bit Systems
+                          Service Pack 2*</li>
+                          <li>Windows Server 2008 for x64-based Systems
+                          and Windows Server 2008 for x64-based Systems
+                          Service Pack 2*</li>
+                          <li>Windows Server 2008 for Itanium-based
+                          Systems and Windows Server 2008 for
+                          Itanium-based Systems Service Pack 2</li>
+                          <li>Windows 7 for 32-bit Systems</li>
+                          <li>Windows 7 for x64-based Systems</li>
+                          <li>Windows Server 2008 R2 for x64-based
+                          Systems*</li>
+                          <li>Windows Server 2008 R2 for Itanium-based
+                          Systems</li>
+                        </ul>
+                      </div>
+                      <h4>Reliable Exploits</h4>
+                      <div>
+                        <ul>
+                          <li>
+                            <a href=
+                            "https://github.com/SecWiki/windows-kernel-exploits/tree/master/MS10-059">
+                            Download the zip</a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
                     <h3>MS10-092 "Schelevator"</h3>
-                    <h4>Affected Versions</h4>
-                    <ul>
-                      <li>Windows Vista Service Pack 1 and Windows
-                      Vista Service Pack 2</li>
-                      <li>Windows Vista x64 Edition Service Pack 1
-                      and Windows Vista x64 Edition Service Pack
-                      2</li>
-                      <li>Windows Server 2008 for 32-bit Systems
-                      and Windows Server 2008 for 32-bit Systems
-                      Service Pack 2*</li>
-                      <li>Windows Server 2008 for x64-based Systems
-                      and Windows Server 2008 for x64-based Systems
-                      Service Pack 2*</li>
-                      <li>Windows Server 2008 for Itanium-based
-                      Systems and Windows Server 2008 for
-                      Itanium-based Systems Service Pack 2</li>
-                      <li>Windows 7 for 32-bit Systems</li>
-                      <li>Windows 7 for x64-based Systems</li>
-                      <li>Windows Server 2008 R2 for x64-based
-                      Systems*</li>
-                      <li>Windows Server 2008 R2 for Itanium-based
-                      Systems</li>
-                    </ul>
-                    <h4>Reliable Exploits</h4>
-                    <ul>
-                      <li>
-                        <a href=
-                        "https://www.exploit-db.com/exploits/15589">
-                        exploit.js</a>
-                      </li>
-                    </ul>
+                    <div>
+                      <h4>Affected Versions</h4>
+                      <div>
+                        <ul>
+                          <li>Windows Vista Service Pack 1 and Windows
+                          Vista Service Pack 2</li>
+                          <li>Windows Vista x64 Edition Service Pack 1
+                          and Windows Vista x64 Edition Service Pack
+                          2</li>
+                          <li>Windows Server 2008 for 32-bit Systems
+                          and Windows Server 2008 for 32-bit Systems
+                          Service Pack 2*</li>
+                          <li>Windows Server 2008 for x64-based Systems
+                          and Windows Server 2008 for x64-based Systems
+                          Service Pack 2*</li>
+                          <li>Windows Server 2008 for Itanium-based
+                          Systems and Windows Server 2008 for
+                          Itanium-based Systems Service Pack 2</li>
+                          <li>Windows 7 for 32-bit Systems</li>
+                          <li>Windows 7 for x64-based Systems</li>
+                          <li>Windows Server 2008 R2 for x64-based
+                          Systems*</li>
+                          <li>Windows Server 2008 R2 for Itanium-based
+                          Systems</li>
+                        </ul>
+                      </div>
+                      <h4>Reliable Exploits</h4>
+                      <div>
+                        <ul>
+                          <li>
+                            <a href=
+                            "https://www.exploit-db.com/exploits/15589">
+                            exploit.js</a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
                     <h3>MS11-046 "afd.sys"</h3>
-                    <h4>Affected Versions</h4>
-                    <ul>
-                      <li>Windows XP SP3 x86</li>
-                      <li>Windows XP Pro SP2 x64</li>
-                      <li>Windows Server 2003 SP2 x86</li>
-                      <li>Windows Server 2003 SP2 x64</li>
-                      <li>Windows Server 2003 SP2 Itanium-based
-                      Systems</li>
-                      <li>Windows Vista SP1 x86</li>
-                      <li>Windows Vista SP2 x86</li>
-                      <li>Windows Vista SP1 x64</li>
-                      <li>Windows Vista SP2 x64</li>
-                      <li>Windows Server 2008 x86</li>
-                      <li>Windows Server 2008 SP2 x86</li>
-                      <li>Windows Server 2008 x64</li>
-                      <li>Windows Server 2008 SP2 x64</li>
-                      <li>Windows Server 2008 Itanium-based
-                      Systems</li>
-                      <li>Windows Server 2008 SP2 Itanium-based
-                      Systems</li>
-                      <li>Windows 7 x86</li>
-                      <li>Windows 7 SP1 x86</li>
-                      <li>Windows 7 x64</li>
-                      <li>Windows 7 SP1 x64</li>
-                      <li>Windows Server 2008 R2 x64</li>
-                      <li>Windows Server 2008 R2 SP1 x64</li>
-                      <li>Windows Server 2008 R2 Itanium-based
-                      Systems</li>
-                      <li>Windows Server 2008 R2 SP1 Itanium-based
-                      Systems</li>
-                    </ul>
-                    <h4>Reliable Exploits</h4>
-                    <ul>
-                      <li>
-                        <a href=
-                        "https://www.exploit-db.com/exploits/40564">
-                        Compile depending on arch</a>
-                      </li>
-                    </ul>
+                    <div>
+                      <h4>Affected Versions</h4>
+                      <div>
+                        <ul>
+                          <li>Windows XP SP3 x86</li>
+                          <li>Windows XP Pro SP2 x64</li>
+                          <li>Windows Server 2003 SP2 x86</li>
+                          <li>Windows Server 2003 SP2 x64</li>
+                          <li>Windows Server 2003 SP2 Itanium-based
+                          Systems</li>
+                          <li>Windows Vista SP1 x86</li>
+                          <li>Windows Vista SP2 x86</li>
+                          <li>Windows Vista SP1 x64</li>
+                          <li>Windows Vista SP2 x64</li>
+                          <li>Windows Server 2008 x86</li>
+                          <li>Windows Server 2008 SP2 x86</li>
+                          <li>Windows Server 2008 x64</li>
+                          <li>Windows Server 2008 SP2 x64</li>
+                          <li>Windows Server 2008 Itanium-based
+                          Systems</li>
+                          <li>Windows Server 2008 SP2 Itanium-based
+                          Systems</li>
+                          <li>Windows 7 x86</li>
+                          <li>Windows 7 SP1 x86</li>
+                          <li>Windows 7 x64</li>
+                          <li>Windows 7 SP1 x64</li>
+                          <li>Windows Server 2008 R2 x64</li>
+                          <li>Windows Server 2008 R2 SP1 x64</li>
+                          <li>Windows Server 2008 R2 Itanium-based
+                          Systems</li>
+                          <li>Windows Server 2008 R2 SP1 Itanium-based
+                          Systems</li>
+                        </ul>
+                      </div>
+                      <h4>Reliable Exploits</h4>
+                      <div>
+                        <ul>
+                          <li>
+                            <a href=
+                            "https://www.exploit-db.com/exploits/40564">
+                            Compile depending on arch</a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
                     <h3>MS11-062 "NDISTAPI"</h3>
                     <h4>Affected Versions</h4>
                     <ul>

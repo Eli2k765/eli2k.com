@@ -622,38 +622,48 @@ end:
                       <h3>Tools</h3>
                       <div>
                         <h4>Hex Editor</h4>
-                        <p>A hex editor is a tool used to view and edit binary files at the hexadecimal level. It allows users to examine and modify the raw data of files, including executables, libraries, and other binary formats.</p>
+                        <div>
+                          <p>A hex editor is a tool used to view and edit binary files at the hexadecimal level. It allows users to examine and modify the raw data of files, including executables, libraries, and other binary formats.</p>
+                        </div>
                         <h4>Decompiler</h4>
-                        <p>A decompiler is a tool that takes an executable or binary file and attempts to reconstruct the original source code from which it was compiled. It can be useful in reverse engineering to analyze and understand the functionality and logic of a program.</p>
+                        <div>
+                          <p>A decompiler is a tool that takes an executable or binary file and attempts to reconstruct the original source code from which it was compiled. It can be useful in reverse engineering to analyze and understand the functionality and logic of a program.</p>
+                        </div>
                         <h4>Disassembler</h4>
-                        <p>A disassembler is a tool that converts machine code or binary files into assembly language instructions. It allows reverse engineers to examine the low-level instructions of a program, understand its structure, and analyze its behavior.</p>
+                        <div>
+                          <p>A disassembler is a tool that converts machine code or binary files into assembly language instructions. It allows reverse engineers to examine the low-level instructions of a program, understand its structure, and analyze its behavior.</p>
+                        </div>
                         <h4>Debugger</h4>
-                        <p>A debugger is a tool used for analyzing and troubleshooting programs. It allows users to execute a program step by step, set breakpoints, inspect variables, and track the program's execution flow. Debuggers are essential for dynamic analysis, bug hunting, and vulnerability discovery.</p>
-                        <ul>
-                          <li>Ring0
-                            <ul>
-                              <li>A ring0 debugger operates in kernel mode and provides deep visibility into the system's inner workings and allows for advanced kernel-level debugging, allowing access to any address in memory.</li>
-                            </ul>
-                          </li>
-                          <li>Ring3
-                            <ul>
-                              <li>A ring3 debugger operates in user mode and only lets us access the address space used by the process we are debugging. They are often user friendly but are commonly detected by anti-reversing techniques</li>
-                            </ul>
-                          </li>
-                        </ul>
+                        <div>
+                          <p>A debugger is a tool used for analyzing and troubleshooting programs. It allows users to execute a program step by step, set breakpoints, inspect variables, and track the program's execution flow. Debuggers are essential for dynamic analysis, bug hunting, and vulnerability discovery.</p>
+                          <ul>
+                            <li>Ring0
+                              <ul>
+                                <li>A ring0 debugger operates in kernel mode and provides deep visibility into the system's inner workings and allows for advanced kernel-level debugging, allowing access to any address in memory.</li>
+                              </ul>
+                            </li>
+                            <li>Ring3
+                              <ul>
+                                <li>A ring3 debugger operates in user mode and only lets us access the address space used by the process we are debugging. They are often user friendly but are commonly detected by anti-reversing techniques</li>
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
                         <h4>Monitoring Tools</h4>
-                        <ul>
-                          <li>System:
-                            <ul>
-                              <li>System monitoring tools are used to monitor access to files or registry keys</li>
-                            </ul>
-                          </li>
-                          <li>API:
-                            <ul>
-                              <li>API monitoring tools hook Windows APIs used by the process under examination.</li>
-                            </ul>
-                          </li>
-                        </ul>
+                        <div>
+                          <ul>
+                            <li>System:
+                              <ul>
+                                <li>System monitoring tools are used to monitor access to files or registry keys</li>
+                              </ul>
+                            </li>
+                            <li>API:
+                              <ul>
+                                <li>API monitoring tools hook Windows APIs used by the process under examination.</li>
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
                       </div>
                     </div>
                     <div class="Tech">
