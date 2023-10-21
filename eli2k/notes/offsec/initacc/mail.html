@@ -79,9 +79,64 @@
                   <div id="contain">
                     <h3>SMTP</h3>
                     <div>
+                      <pre><code class="language-bash">#connect
+telnet x.x.x.x 25
+nc -vn x.x.x.x 25
+
+#basic commands
+HELO
+HELP
+VRFY
+AUTH
+MAIL FROM
+RCPT TO
+
+#discover MX servers
+dig +short mx domain.com
+
+#enum
+nmap -p25 --script smtp-commands x.x.x.x
+nmap -p25 --script smtp-open-relay x.x.x.x -v
+nmap -p25 --script smtp-enum-users x.x.x.x
+</code></pre>
                     </div>
                     <h3>IMAP</h3>
+                    <div>
+                      <pre><code class="language-bash">#connect
+telnet x.x.x.x 143
+nc -nv x.x.x.x 143
+openssl s_client -connect x.x.x.x:993 -quiet
+
+#basic commands
+LOGIN username password
+LIST "" *
+LIST INBOX *
+
+#list mailboxes
+curl -k 'imaps://x.x.x.x/' --user user:pass
+</code></pre>
+                    </div>
                     <h3>POP3</h3>
+                    <div>
+                      <pre><code class="language-bash">#connect
+nc -nv x.x.x.x 110
+openssl s_client -connect x.x.x.x:995 -crlf -quiet
+
+#basic commands
+USER uid
+PASS password
+STAT
+LIST
+RETR n
+DELE n
+RSET
+QUIT
+CAPA
+
+#enum
+nmap --script pop3-capabilities -sV -port 110 x.x.x.x
+                      </code></pre>
+                    </div>
                   </div>
                 </article>
               </div>

