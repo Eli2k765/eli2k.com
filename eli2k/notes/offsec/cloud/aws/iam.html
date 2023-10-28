@@ -81,9 +81,80 @@
                     <div>
                       <h4>Principles</h4>
                       <div>
+                        <ul>
+                          <li>Root</li>
+                          <ul>
+                            <li>Represents the accounts owner</li>
+                            <li>Reset passwords are usually a weakness of AWS root accounts that don't have MFA</li>
+                            <li></li>
+                            <li><pre><code class="language-bash">aws organization describe-organization</code></pre></li>
+                          </ul>
+                          <li>IAM Users</li>
+                          <ul>
+                            <li>Most basic principle</li>
+                            <li>Represent people or apps</li>
+                            <li><pre><code class="language-bash">aws iam list-users
+aws iam list-access-keys --user-name username</code></pre> </li>
+                          </ul>
+                          <li>Roles</li>
+                          <ul>
+                            <li>Enables trust because of assume-role</li>
+                            <li><pre><code class="language-bash">aws iam list-roles</code></pre></li>
+                          </ul>
+                          <li>*</li>
+                          <ul>
+                            <li>Everyone, could be anyone on the internet or any AWS Costomer</li>
+                          </ul>
+                        </ul>
                       </div>
                       <h4>Permissions</h4>
                       <div>
+                        <ul>
+                          <li>IAM Policies</li>
+                          <ul>
+                            <li>Attached to specific principles and define the resources a principle can act on.</li>
+                            <li>Contain:</li>
+                            <ul>
+                              <li>Optional SID</li>
+                              <li>Action - What the policy explicitly allows or denies</li>
+                              <li>Resources - The ARNs of resources the statement applies to</li>
+                              <li>Effect - Either Allow or Deny</li>
+                              <li>Condition - Optional conditions</li>
+                            </ul>
+                            <li><pre><code class="language-bash">aws iam get-policy --policy-arn arn:aws:iam::aws:policy/AdministratorAccess</code></pre></li>
+                            <li>Action</li>
+                            <ul>
+                              <li>Consist of a service and an API call</li>
+                            </ul>
+                            <li>Resource</li>
+                            <ul>
+                              <li>A resource is always in an ARN format or a wildcard to represent any resource</li>
+                              <li>Essential for least privilege</li>
+                            </ul>
+                            <li>Effect</li>
+                            <ul>
+                              <li>Explicit allow or deny</li>
+                            </ul>
+                            <li>Principal</li>
+                            <ul>
+                              <li>Can be AWS Account, IAM roles, Role sessions, IAM users, Federated user sessions, services, or everyone.</li>
+                            </ul>
+                            <li>Conditions</li>
+                            <ul>
+                              <li>Evaluate against specific keys and values</li>
+                            </ul>
+                          </ul>
+                          <li>Resource Policies</li>
+                          <ul>
+                            <li>Attached to a resource and define the Principles that can act on the resource</li>
+                          </ul>
+                          <li>Service Control Policies</li>
+                          <ul>
+                            <li>A function of Organizations</li>
+                            <li>Apply to all principles in the AWS account</li>
+                            <li>Users cannot view</li>
+                          </ul>
+                        </ul>
                       </div>
                       <h4>Credentials</h4>
                       <div></div>
