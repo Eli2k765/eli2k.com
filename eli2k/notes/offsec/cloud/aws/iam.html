@@ -157,7 +157,39 @@ aws iam list-access-keys --user-name username</code></pre> </li>
                         </ul>
                       </div>
                       <h4>Credentials</h4>
-                      <div></div>
+                      <div>
+                        <ul>
+                          <li>Root Password</li>
+                          <ul>
+                            <li>If the acct was created before 2017, it is the same as retail.</li>
+                            <li>If the acct was created via the CreateAccount API call, it is a random string</li>
+                            <li>Login and pw reset available on <a ref="https://signin.aws.amazon.com/signin">the main sign-in page.</a></li>
+                          </ul>
+                          <li>IAM Login</li>
+                          <ul>
+                            <li>LoginProfile is the term used to describe the users console pass</li>
+                            <li>IAM users can be granted access to AWS console from the Security Credentials tab or via CLI:<pre><code class="language-bash">aws iam create-login-profile --user IAM-User --password 'Password123'</code></pre></li>
+                            <li>You can also change a password: <pre><code class="language-bash">aws iam update-login-profile --user IAM-User --password '123Password'</code></pre></li>
+                            <li>And display password policy: <pre><code class="language-bash">aws iam get-account-password-policy</code></pre></li>
+                          </ul>
+                          <li>AWS API Access Key</li>
+                          <ul>
+                            <li>Long Term</li>
+                            <ul>
+                              <li>Begin with AKIA</li>
+                              <li>Create Key: <pre><code class="language-bash">aws iam create-access-key --user-name student</code></pre></li>
+                              <li>Disable Key: <pre><code class="language-bash">aws iam update-access-key --access-key-id AKIA... --status Inactive</code></pre></li>
+                              <li>Delete Key: <pre><code class="language-bash">aws iam delete-access-key --access-key-id AKIA...</code></pre></li>
+                              <li>Identify Acct: <pre><code class="language-bash">aws sts get-access-key-info --access-key-id AKIA...</code></pre></li>
+                            </ul>
+                            <li>Temporary Session</li>
+                            <ul>
+                              <li>Begin with ASIA</li>
+                              <li>Must be requested, cannot be created: <pre><code class="language-bash">aws sts get-session-token</code></pre></li>
+                            </ul>
+                          </ul>
+                        </ul>
+                      </div>
                     </div>
                     <h3>IAM Initial Access</h3>
                     <div></div>
